@@ -212,6 +212,7 @@ __gshared extern(C)
 	const(char)* as_metadata_get_locale (AsMetadata* metad);
 	const(char)* as_metadata_get_origin (AsMetadata* metad);
 	AsParserMode as_metadata_get_parser_mode (AsMetadata* metad);
+	int as_metadata_get_update_existing (AsMetadata* metad);
 	void as_metadata_parse_file (AsMetadata* metad, GFile* file, GError** err);
 	void as_metadata_parse_xml (AsMetadata* metad, const(char)* data, GError** err);
 	void as_metadata_parse_yaml (AsMetadata* metad, const(char)* data, GError** err);
@@ -220,6 +221,7 @@ __gshared extern(C)
 	void as_metadata_set_locale (AsMetadata* metad, const(char)* locale);
 	void as_metadata_set_origin (AsMetadata* metad, const(char)* origin);
 	void as_metadata_set_parser_mode (AsMetadata* metad, AsParserMode mode);
+	void as_metadata_set_update_existing (AsMetadata* metad, int update);
 
 	// appstream.Provided
 
@@ -305,4 +307,3 @@ __gshared extern(C)
 	void as_validator_issue_set_location (AsValidatorIssue* issue, const(char)* location);
 	void as_validator_issue_set_message (AsValidatorIssue* issue, const(char)* message);
 }
-

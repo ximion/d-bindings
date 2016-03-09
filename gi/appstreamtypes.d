@@ -27,9 +27,6 @@ module gi.appstreamtypes;
 import gi.glibtypes;
 import gi.gobjecttypes;
 
-import gobject.Type;
-import gio.File;
-
 public alias void* AsCategoryAutoptr;
 
 public alias void* AsComponentAutoptr;
@@ -331,6 +328,10 @@ public enum AsMetadataError
 	 * Expected upstream metadata but got distro metadata, or vice versa.
 	 */
 	UNEXPECTED_FORMAT_KIND = 1,
+	/**
+	 * We expected a component in the pool, but couldn't find one.
+	 */
+	NO_COMPONENT = 2,
 }
 alias AsMetadataError MetadataError;
 

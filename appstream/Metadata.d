@@ -210,6 +210,15 @@ public class Metadata : ObjectG
 	}
 
 	/**
+	 * Return: Whether existing components should be updates with the parsed data,
+	 *     instead of creating new ones.
+	 */
+	public bool getUpdateExisting()
+	{
+		return as_metadata_get_update_existing(asMetadata) != 0;
+	}
+
+	/**
 	 * Parses an AppStream upstream metadata file.
 	 *
 	 * Params:
@@ -345,5 +354,19 @@ public class Metadata : ObjectG
 	public void setParserMode(AsParserMode mode)
 	{
 		as_metadata_set_parser_mode(asMetadata, mode);
+	}
+
+	/**
+	 * If set to %TRUE, the parser will not create new components but
+	 * instead update existing components in the pool with new metadata.
+	 *
+	 * NOTE: Right now, this feature is only implemented for metainfo XML parsing!
+	 *
+	 * Params:
+	 *     update = A bool value.
+	 */
+	public void setUpdateExisting(bool update)
+	{
+		as_metadata_set_update_existing(asMetadata, update);
 	}
 }
