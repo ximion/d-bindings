@@ -147,6 +147,18 @@ public class Metadata : ObjectG
 	}
 
 	/**
+	 * Serialize all #AsComponent instances into AppStream DEP-11
+	 * distro-YAML data.
+	 * %NULL is returned if there is nothing to serialize.
+	 *
+	 * Return: A string containing the YAML markup. Free with g_free()
+	 */
+	public string componentsToDistroYaml()
+	{
+		return Str.toString(as_metadata_components_to_distro_yaml(asMetadata));
+	}
+
+	/**
 	 * Gets the #AsComponent which has been parsed from the XML.
 	 * If the AppStream XML contained multiple components, return the first
 	 * component that has been parsed.
@@ -216,6 +228,14 @@ public class Metadata : ObjectG
 	public bool getUpdateExisting()
 	{
 		return as_metadata_get_update_existing(asMetadata) != 0;
+	}
+
+	/**
+	 * Return: Whether we will write a header/root node in distro metadata.
+	 */
+	public bool getWriteHeader()
+	{
+		return as_metadata_get_write_header(asMetadata) != 0;
 	}
 
 	/**
@@ -300,6 +320,27 @@ public class Metadata : ObjectG
 	}
 
 	/**
+	 * Serialize all #AsComponent instances to XML and save the data to a file.
+	 * An existing file at the same location will be overridden.
+	 *
+	 * Params:
+	 *     fname = The filename for the new YAML file.
+	 *
+	 * Throws: GException on failure.
+	 */
+	public void saveDistroYaml(string fname)
+	{
+		GError* err = null;
+		
+		as_metadata_save_distro_yaml(asMetadata, Str.toStringz(fname), &err);
+		
+		if (err !is null)
+		{
+			throw new GException( new ErrorG(err) );
+		}
+	}
+
+	/**
 	 * Serialize #AsComponent instance to XML and save it to file.
 	 * An existing file at the same location will be overridden.
 	 *
@@ -363,10 +404,28 @@ public class Metadata : ObjectG
 	 * NOTE: Right now, this feature is only implemented for metainfo XML parsing!
 	 *
 	 * Params:
-	 *     update = A bool value.
+	 *     update = A boolean value.
 	 */
 	public void setUpdateExisting(bool update)
 	{
 		as_metadata_set_update_existing(asMetadata, update);
+	}
+
+	/**
+	 * If set to %TRUE, tehe metadata writer will omit writing a DEP-11
+	 * header document when in YAML mode, and will not write a root components node
+	 * when writing XML data.
+	 * Please keep in mind that this will create an invalid DEP-11 YAML AppStream
+	 * distro metadata file, and an invalid XML file.
+	 * This parameter should only be changed e.g. by the appstream-generator tool.
+	 *
+	 * NOTE: Right now, this feature is only implemented for YAML!
+	 *
+	 * Params:
+	 *     wheader = A boolean value.
+	 */
+	public void setWriteHeader(bool wheader)
+	{
+		as_metadata_set_write_header(asMetadata, wheader);
 	}
 }

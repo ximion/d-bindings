@@ -29,7 +29,6 @@ import gi.appstreamtypes;
 import gi.gobjecttypes;
 import gi.giotypes;
 
-
 __gshared extern(C)
 {
 
@@ -207,21 +206,25 @@ __gshared extern(C)
 	void as_metadata_clear_components (AsMetadata* metad);
 	char* as_metadata_component_to_upstream_xml (AsMetadata* metad);
 	char* as_metadata_components_to_distro_xml (AsMetadata* metad);
+	char* as_metadata_components_to_distro_yaml (AsMetadata* metad);
 	AsComponent* as_metadata_get_component (AsMetadata* metad);
 	GPtrArray* as_metadata_get_components (AsMetadata* metad);
 	const(char)* as_metadata_get_locale (AsMetadata* metad);
 	const(char)* as_metadata_get_origin (AsMetadata* metad);
 	AsParserMode as_metadata_get_parser_mode (AsMetadata* metad);
 	int as_metadata_get_update_existing (AsMetadata* metad);
+	int as_metadata_get_write_header (AsMetadata* metad);
 	void as_metadata_parse_file (AsMetadata* metad, GFile* file, GError** err);
 	void as_metadata_parse_xml (AsMetadata* metad, const(char)* data, GError** err);
 	void as_metadata_parse_yaml (AsMetadata* metad, const(char)* data, GError** err);
 	void as_metadata_save_distro_xml (AsMetadata* metad, const(char)* fname, GError** err);
+	void as_metadata_save_distro_yaml (AsMetadata* metad, const(char)* fname, GError** err);
 	void as_metadata_save_upstream_xml (AsMetadata* metad, const(char)* fname, GError** err);
 	void as_metadata_set_locale (AsMetadata* metad, const(char)* locale);
 	void as_metadata_set_origin (AsMetadata* metad, const(char)* origin);
 	void as_metadata_set_parser_mode (AsMetadata* metad, AsParserMode mode);
 	void as_metadata_set_update_existing (AsMetadata* metad, int update);
+	void as_metadata_set_write_header (AsMetadata* metad, int wheader);
 
 	// appstream.Provided
 
@@ -307,3 +310,4 @@ __gshared extern(C)
 	void as_validator_issue_set_location (AsValidatorIssue* issue, const(char)* location);
 	void as_validator_issue_set_message (AsValidatorIssue* issue, const(char)* message);
 }
+
