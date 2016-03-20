@@ -911,7 +911,6 @@ __gshared extern(C)
 	int g_sequence_get_length (GSequence* seq);
 	GSequenceIter* g_sequence_insert_sorted (GSequence* seq, void* data, GCompareDataFunc cmpFunc, void* cmpData);
 	GSequenceIter* g_sequence_insert_sorted_iter (GSequence* seq, void* data, GSequenceIterCompareFunc iterCmp, void* cmpData);
-	int g_sequence_is_empty (GSequence* seq);
 	GSequenceIter* g_sequence_lookup (GSequence* seq, void* data, GCompareDataFunc cmpFunc, void* cmpData);
 	GSequenceIter* g_sequence_lookup_iter (GSequence* seq, void* data, GSequenceIterCompareFunc iterCmp, void* cmpData);
 	GSequenceIter* g_sequence_prepend (GSequence* seq, void* data);

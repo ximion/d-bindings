@@ -645,15 +645,6 @@ __gshared extern(C)
 	int g_data_output_stream_put_uint64 (GDataOutputStream* stream, ulong data, GCancellable* cancellable, GError** err);
 	void g_data_output_stream_set_byte_order (GDataOutputStream* stream, GDataStreamByteOrder order);
 
-	// gio.DatagramBased
-
-	GType g_datagram_based_get_type ();
-	GIOCondition g_datagram_based_condition_check (GDatagramBased* datagramBased, GIOCondition condition);
-	int g_datagram_based_condition_wait (GDatagramBased* datagramBased, GIOCondition condition, long timeout, GCancellable* cancellable, GError** err);
-	GSource* g_datagram_based_create_source (GDatagramBased* datagramBased, GIOCondition condition, GCancellable* cancellable);
-	int g_datagram_based_receive_messages (GDatagramBased* datagramBased, GInputMessage* messages, uint numMessages, int flags, long timeout, GCancellable* cancellable, GError** err);
-	int g_datagram_based_send_messages (GDatagramBased* datagramBased, GOutputMessage* messages, uint numMessages, int flags, long timeout, GCancellable* cancellable, GError** err);
-
 	// gio.DesktopAppInfo
 
 	GType g_desktop_app_info_get_type ();
@@ -1715,7 +1706,6 @@ __gshared extern(C)
 	ptrdiff_t g_socket_receive (GSocket* socket, char* buffer, size_t size, GCancellable* cancellable, GError** err);
 	ptrdiff_t g_socket_receive_from (GSocket* socket, GSocketAddress** address, char* buffer, size_t size, GCancellable* cancellable, GError** err);
 	ptrdiff_t g_socket_receive_message (GSocket* socket, GSocketAddress** address, GInputVector* vectors, int numVectors, GSocketControlMessage*** messages, int* numMessages, int* flags, GCancellable* cancellable, GError** err);
-	int g_socket_receive_messages (GSocket* socket, GInputMessage* messages, uint numMessages, int flags, GCancellable* cancellable, GError** err);
 	ptrdiff_t g_socket_receive_with_blocking (GSocket* socket, char* buffer, size_t size, int blocking, GCancellable* cancellable, GError** err);
 	ptrdiff_t g_socket_send (GSocket* socket, char* buffer, size_t size, GCancellable* cancellable, GError** err);
 	ptrdiff_t g_socket_send_message (GSocket* socket, GSocketAddress* address, GOutputVector* vectors, int numVectors, GSocketControlMessage** messages, int numMessages, int flags, GCancellable* cancellable, GError** err);
@@ -1784,13 +1774,6 @@ __gshared extern(C)
 	void g_socket_client_set_timeout (GSocketClient* client, uint timeout);
 	void g_socket_client_set_tls (GSocketClient* client, int tls);
 	void g_socket_client_set_tls_validation_flags (GSocketClient* client, GTlsCertificateFlags flags);
-
-	// gio.SocketConnectable
-
-	GType g_socket_connectable_get_type ();
-	GSocketAddressEnumerator* g_socket_connectable_enumerate (GSocketConnectable* connectable);
-	GSocketAddressEnumerator* g_socket_connectable_proxy_enumerate (GSocketConnectable* connectable);
-	char* g_socket_connectable_to_string (GSocketConnectable* connectable);
 
 	// gio.SocketConnection
 

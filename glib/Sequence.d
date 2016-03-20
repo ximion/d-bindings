@@ -249,12 +249,6 @@ public class Sequence
 		return new SequenceIter(cast(GSequenceIter*) p);
 	}
 
-	/** */
-	public bool isEmpty()
-	{
-		return g_sequence_is_empty(gSequence) != 0;
-	}
-
 	/**
 	 * Returns an iterator pointing to the position of the first item found
 	 * equal to @data according to @cmp_func and @cmp_data. If more than one
