@@ -49,6 +49,12 @@ public class PtrArray
 		return cast(void*)gPtrArray;
 	}
 
+	@property
+	public uint len ()
+	{
+		return gPtrArray.len;
+	}
+
 	/**
 	 * Sets our main struct and passes it to the parent class.
 	 */
