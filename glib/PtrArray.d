@@ -55,6 +55,11 @@ public class PtrArray
 		return gPtrArray.len;
 	}
 
+	public void* index (uint idx)
+	{
+		return (gPtrArray.pdata)[idx];
+	}
+
 	/**
 	 * Sets our main struct and passes it to the parent class.
 	 */
