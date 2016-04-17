@@ -1,25 +1,21 @@
 /*
- * This file is part of gtkD.
+ * Licensed under the GNU Lesser General Public License Version 3
  *
- * gtkD is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License
- * as published by the Free Software Foundation; either version 3
- * of the License, or (at your option) any later version, with
- * some exceptions, please read the COPYING file.
+ * This library is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the license, or
+ * (at your option) any later version.
  *
- * gtkD is distributed in the hope that it will be useful,
+ * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with gtkD; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA
+ * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 // generated automatically - do not change
-// find conversion definition on APILookup.txt
-// implement new conversion functionalities on the wrap.utils pakage
 
 
 module gi.appstream;
@@ -207,6 +203,7 @@ __gshared extern(C)
 	char* as_metadata_component_to_upstream_xml (AsMetadata* metad);
 	char* as_metadata_components_to_distro_xml (AsMetadata* metad);
 	char* as_metadata_components_to_distro_yaml (AsMetadata* metad);
+	const(char)* as_metadata_get_architecture (AsMetadata* metad);
 	AsComponent* as_metadata_get_component (AsMetadata* metad);
 	GPtrArray* as_metadata_get_components (AsMetadata* metad);
 	const(char)* as_metadata_get_locale (AsMetadata* metad);
@@ -220,6 +217,7 @@ __gshared extern(C)
 	void as_metadata_save_distro_xml (AsMetadata* metad, const(char)* fname, GError** err);
 	void as_metadata_save_distro_yaml (AsMetadata* metad, const(char)* fname, GError** err);
 	void as_metadata_save_upstream_xml (AsMetadata* metad, const(char)* fname, GError** err);
+	void as_metadata_set_architecture (AsMetadata* metad, const(char)* arch);
 	void as_metadata_set_locale (AsMetadata* metad, const(char)* locale);
 	void as_metadata_set_origin (AsMetadata* metad, const(char)* origin);
 	void as_metadata_set_parser_mode (AsMetadata* metad, AsParserMode mode);
