@@ -100,6 +100,7 @@ __gshared extern(C)
 	const(char)* as_component_get_summary (AsComponent* cpt);
 	GPtrArray* as_component_get_translations (AsComponent* cpt);
 	const(char)* as_component_get_url (AsComponent* cpt, AsUrlKind urlKind);
+	AsValueFlags as_component_get_value_flags (AsComponent* cpt);
 	int as_component_has_bundle (AsComponent* cpt);
 	int as_component_has_category (AsComponent* cpt, const(char)* category);
 	int as_component_is_compulsory_for_desktop (AsComponent* cpt, const(char)* desktop);
@@ -122,6 +123,7 @@ __gshared extern(C)
 	void as_component_set_project_license (AsComponent* cpt, const(char)* value);
 	void as_component_set_source_pkgname (AsComponent* cpt, const(char)* spkgname);
 	void as_component_set_summary (AsComponent* cpt, const(char)* value, const(char)* locale);
+	void as_component_set_value_flags (AsComponent* cpt, AsValueFlags flags);
 	char* as_component_to_string (AsComponent* cpt);
 
 	// appstream.DistroDetails

@@ -22,6 +22,7 @@ module gi.appstreamtypes;
 
 import gi.glibtypes;
 import gi.gobjecttypes;
+import gi.giotypes;
 
 /**
  * The bundle type.
@@ -99,15 +100,15 @@ public enum AsComponentKind
 	/**
 	 * An application with a .desktop-file
 	 */
-	DESKTOP_APPLICATION = 2,
+	DESKTOP_APP = 2,
 	/**
 	 * A console application
 	 */
-	CONSOLE_APPLICATION = 3,
+	CONSOLE_APP = 3,
 	/**
 	 * A web application
 	 */
-	WEB_APPLICATION = 4,
+	WEB_APP = 4,
 	/**
 	 * An extension of existing software, which does not run standalone
 	 */
@@ -566,6 +567,23 @@ public enum AsUrlKind
 	TRANSLATE = 6,
 }
 alias AsUrlKind UrlKind;
+
+/**
+ * Set how values assigned to an #AsComponent should be treated when
+ * they are set or retrieved.
+ */
+public enum AsValueFlags
+{
+	/**
+	 * No flags.
+	 */
+	NONE = 0,
+	/**
+	 * Don't fall back to C when retrieving translated values.
+	 */
+	NO_TRANSLATION_FALLBACK = 1,
+}
+alias AsValueFlags ValueFlags;
 
 struct AsCategory
 {

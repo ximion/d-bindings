@@ -721,6 +721,14 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Return: The #AsValueFlags that are set on @cpt.
+	 */
+	public AsValueFlags getValueFlags()
+	{
+		return as_component_get_value_flags(asComponent);
+	}
+
+	/**
 	 * Return: %TRUE if this component has a bundle-id associated.
 	 */
 	public bool hasBundle()
@@ -968,6 +976,12 @@ public class Component : ObjectG
 	public void setSummary(string value, string locale)
 	{
 		as_component_set_summary(asComponent, Str.toStringz(value), Str.toStringz(locale));
+	}
+
+	/** */
+	public void setValueFlags(AsValueFlags flags)
+	{
+		as_component_set_value_flags(asComponent, flags);
 	}
 
 	/**
