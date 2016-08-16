@@ -25,4 +25,5 @@ file: /usr/share/gir-1.0/AppStream-1.0.gir
 addAliases: start
 	import gi.glibtypes;
 	import gi.gobjecttypes;
+	import gi.giotypes;
 addAliases: end

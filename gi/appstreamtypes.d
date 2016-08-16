@@ -23,36 +23,6 @@ module gi.appstreamtypes;
 import gi.glibtypes;
 import gi.gobjecttypes;
 
-public alias void* AsCategoryAutoptr;
-
-public alias void* AsComponentAutoptr;
-
-public alias void* AsDataPoolAutoptr;
-
-public alias void* AsDatabaseAutoptr;
-
-public alias void* AsDistroDetailsAutoptr;
-
-public alias void* AsIconAutoptr;
-
-public alias void* AsImageAutoptr;
-
-public alias void* AsMenuParserAutoptr;
-
-public alias void* AsMetadataAutoptr;
-
-public alias void* AsProvidedAutoptr;
-
-public alias void* AsReleaseAutoptr;
-
-public alias void* AsScreenshotAutoptr;
-
-public alias void* AsTranslationAutoptr;
-
-public alias void* AsValidatorIssueAutoptr;
-
-public alias void* AsValidatorAutoptr;
-
 /**
  * The bundle type.
  */
@@ -67,11 +37,31 @@ public enum AsBundleKind
 	 */
 	LIMBA = 1,
 	/**
-	 * An xdg-app bundle
+	 * A Flatpak bundle
 	 */
-	XDG_APP = 2,
+	FLATPAK = 2,
 }
 alias AsBundleKind BundleKind;
+
+/**
+ * Flags on how caching should be used.
+ */
+public enum AsCacheFlags
+{
+	/**
+	 * Type invalid or not known
+	 */
+	NONE = 0,
+	/**
+	 * Create an user-specific metadata cache.
+	 */
+	USE_USER = 1,
+	/**
+	 * Use and - if possible - update the global metadata cache.
+	 */
+	USE_SYSTEM = 2,
+}
+alias AsCacheFlags CacheFlags;
 
 /**
  * Checksums supported by #AsRelease
@@ -109,66 +99,38 @@ public enum AsComponentKind
 	/**
 	 * An application with a .desktop-file
 	 */
-	DESKTOP = 2,
+	DESKTOP_APPLICATION = 2,
 	/**
-	 * A font
+	 * A console application
 	 */
-	FONT = 3,
+	CONSOLE_APPLICATION = 3,
 	/**
-	 * A multimedia codec
+	 * A web application
 	 */
-	CODEC = 4,
-	/**
-	 * An input-method provider
-	 */
-	INPUTMETHOD = 5,
+	WEB_APPLICATION = 4,
 	/**
 	 * An extension of existing software, which does not run standalone
 	 */
-	ADDON = 6,
+	ADDON = 5,
+	/**
+	 * A font
+	 */
+	FONT = 6,
+	/**
+	 * A multimedia codec
+	 */
+	CODEC = 7,
+	/**
+	 * An input-method provider
+	 */
+	INPUTMETHOD = 8,
 	/**
 	 * Firmware
 	 */
-	FIRMWARE = 7,
-	LAST = 8,
+	FIRMWARE = 9,
+	LAST = 10,
 }
 alias AsComponentKind ComponentKind;
-
-/**
- * A metadata pool error.
- */
-public enum AsDataPoolError
-{
-	/**
-	 * Generic failure
-	 */
-	FAILED = 0,
-}
-alias AsDataPoolError DataPoolError;
-
-/**
- * A database query error.
- */
-public enum AsDatabaseError
-{
-	/**
-	 * Generic failure
-	 */
-	FAILED = 0,
-	/**
-	 * Database was not found
-	 */
-	MISSING = 1,
-	/**
-	 * Tried to perform action on a closed database.
-	 */
-	CLOSED = 2,
-	/**
-	 * A query term was invalid.
-	 */
-	TERM_INVALID = 3,
-}
-alias AsDatabaseError DatabaseError;
 
 /**
  * The icon type.
@@ -312,22 +274,47 @@ public enum AsIssueKind
 alias AsIssueKind IssueKind;
 
 /**
+ * Defines how #AsComponent data should be merged if the component is
+ * set for merge.
+ */
+public enum AsMergeKind
+{
+	/**
+	 * No merge is happening.
+	 */
+	NONE = 0,
+	/**
+	 * Merge replacing data of target.
+	 */
+	REPLACE = 1,
+	/**
+	 * Merge appending data to target.
+	 */
+	APPEND = 2,
+}
+alias AsMergeKind MergeKind;
+
+/**
  * A metadata processing error.
  */
 public enum AsMetadataError
 {
 	/**
-	 * Generic failure
+	 * Generic failure.
 	 */
 	FAILED = 0,
 	/**
+	 * Unable to parse the metadata file.
+	 */
+	PARSE = 1,
+	/**
 	 * Expected upstream metadata but got distro metadata, or vice versa.
 	 */
-	UNEXPECTED_FORMAT_KIND = 1,
+	UNEXPECTED_FORMAT_KIND = 2,
 	/**
 	 * We expected a component in the pool, but couldn't find one.
 	 */
-	NO_COMPONENT = 2,
+	NO_COMPONENT = 3,
 }
 alias AsMetadataError MetadataError;
 
@@ -349,6 +336,34 @@ public enum AsParserMode
 	DISTRO = 1,
 }
 alias AsParserMode ParserMode;
+
+/**
+ * A metadata pool error.
+ */
+public enum AsPoolError
+{
+	/**
+	 * Generic failure
+	 */
+	FAILED = 0,
+	/**
+	 * We do not have write-access to the cache target location.
+	 */
+	TARGET_NOT_WRITABLE = 1,
+	/**
+	 * The pool was loaded, but we had to ignore some metadata.
+	 */
+	INCOMPLETE = 2,
+	/**
+	 * An AppStream-ID collision occured (a component with that ID already existed in the pool)
+	 */
+	COLLISION = 3,
+	/**
+	 * A search or selection term was invalid.
+	 */
+	TERM_INVALID = 4,
+}
+alias AsPoolError PoolError;
 
 /**
  * Type of the public interface components can provide.
@@ -449,6 +464,26 @@ public enum AsSizeKind
 alias AsSizeKind SizeKind;
 
 /**
+ * The suggested type.
+ */
+public enum AsSuggestedKind
+{
+	/**
+	 * Unknown suggested kind
+	 */
+	UNKNOWN = 0,
+	/**
+	 * Suggestions provided by the upstream project.
+	 */
+	UPSTREAM = 1,
+	/**
+	 * Suggestions provided by automatic heuristics.
+	 */
+	HEURISTIC = 2,
+}
+alias AsSuggestedKind SuggestedKind;
+
+/**
  * The translation type.
  */
 public enum AsTranslationKind
@@ -525,6 +560,10 @@ public enum AsUrlKind
 	 * Page with information about how to donate to the project
 	 */
 	DONATION = 5,
+	/**
+	 * Page with instructions on how to translate the project / submit translations.
+	 */
+	TRANSLATE = 6,
 }
 alias AsUrlKind UrlKind;
 
@@ -556,50 +595,6 @@ struct AsComponent
 }
 
 struct AsComponentClass
-{
-	GObjectClass parentClass;
-	/** */
-	extern(C) void function() AsReserved1;
-	/** */
-	extern(C) void function() AsReserved2;
-	/** */
-	extern(C) void function() AsReserved3;
-	/** */
-	extern(C) void function() AsReserved4;
-	/** */
-	extern(C) void function() AsReserved5;
-	/** */
-	extern(C) void function() AsReserved6;
-}
-
-struct AsDataPool
-{
-	GObject parentInstance;
-}
-
-struct AsDataPoolClass
-{
-	GObjectClass parentClass;
-	/** */
-	extern(C) void function() AsReserved1;
-	/** */
-	extern(C) void function() AsReserved2;
-	/** */
-	extern(C) void function() AsReserved3;
-	/** */
-	extern(C) void function() AsReserved4;
-	/** */
-	extern(C) void function() AsReserved5;
-	/** */
-	extern(C) void function() AsReserved6;
-}
-
-struct AsDatabase
-{
-	GObject parentInstance;
-}
-
-struct AsDatabaseClass
 {
 	GObjectClass parentClass;
 	/** */
@@ -726,6 +721,28 @@ struct AsMetadataClass
 	extern(C) void function() AsReserved6;
 }
 
+struct AsPool
+{
+	GObject parentInstance;
+}
+
+struct AsPoolClass
+{
+	GObjectClass parentClass;
+	/** */
+	extern(C) void function() AsReserved1;
+	/** */
+	extern(C) void function() AsReserved2;
+	/** */
+	extern(C) void function() AsReserved3;
+	/** */
+	extern(C) void function() AsReserved4;
+	/** */
+	extern(C) void function() AsReserved5;
+	/** */
+	extern(C) void function() AsReserved6;
+}
+
 struct AsProvided
 {
 	GObject parentInstance;
@@ -776,6 +793,28 @@ struct AsScreenshot
 }
 
 struct AsScreenshotClass
+{
+	GObjectClass parentClass;
+	/** */
+	extern(C) void function() AsReserved1;
+	/** */
+	extern(C) void function() AsReserved2;
+	/** */
+	extern(C) void function() AsReserved3;
+	/** */
+	extern(C) void function() AsReserved4;
+	/** */
+	extern(C) void function() AsReserved5;
+	/** */
+	extern(C) void function() AsReserved6;
+}
+
+struct AsSuggested
+{
+	GObject parentInstance;
+}
+
+struct AsSuggestedClass
 {
 	GObjectClass parentClass;
 	/** */
