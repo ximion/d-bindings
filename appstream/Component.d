@@ -24,6 +24,7 @@ private import appstream.Icon;
 private import appstream.Provided;
 private import appstream.Release;
 private import appstream.Screenshot;
+private import appstream.Suggested;
 private import appstream.Translation;
 private import gi.appstream;
 public  import gi.appstreamtypes;
@@ -105,6 +106,17 @@ public class Component : ObjectG
 	public void addBundleId(AsBundleKind bundleKind, string id)
 	{
 		as_component_add_bundle_id(asComponent, bundleKind, Str.toStringz(id));
+	}
+
+	/**
+	 * Add a category.
+	 *
+	 * Params:
+	 *     category = the categories name to add.
+	 */
+	public void addCategory(string category)
+	{
+		as_component_add_category(asComponent, Str.toStringz(category));
 	}
 
 	/**
@@ -194,6 +206,17 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Add an #AsSuggested to this component.
+	 *
+	 * Params:
+	 *     suggested = The #AsSuggested
+	 */
+	public void addSuggested(Suggested suggested)
+	{
+		as_component_add_suggested(asComponent, (suggested is null) ? null : suggested.getSuggestedStruct());
+	}
+
+	/**
 	 * Assign an #AsTranslation object describing the translation system used
 	 * by this component.
 	 *
@@ -250,17 +273,31 @@ public class Component : ObjectG
 	/**
 	 * Return: String array of categories
 	 */
-	public string[] getCategories()
+	public PtrArray getCategories()
 	{
-		return Str.toStringArray(as_component_get_categories(asComponent));
+		auto p = as_component_get_categories(asComponent);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
 	 * Return: A list of desktops where this component is compulsory
 	 */
-	public string[] getCompulsoryForDesktops()
+	public PtrArray getCompulsoryForDesktops()
 	{
-		return Str.toStringArray(as_component_get_compulsory_for_desktops(asComponent));
+		auto p = as_component_get_compulsory_for_desktops(asComponent);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
@@ -271,6 +308,24 @@ public class Component : ObjectG
 	public string getDescription()
 	{
 		return Str.toString(as_component_get_description(asComponent));
+	}
+
+	/**
+	 * Get the Desktop Entry ID for this component, if it is
+	 * of type "desktop-application".
+	 * For most desktop-application components, this is the name
+	 * of the .desktop file.
+	 *
+	 * Refer to https://specifications.freedesktop.org/desktop-entry-spec/latest/ape.html for more
+	 * information.
+	 *
+	 * Return: The desktop file id.
+	 *
+	 * Since: 0.9.8
+	 */
+	public string getDesktopId()
+	{
+		return Str.toString(as_component_get_desktop_id(asComponent));
 	}
 
 	/**
@@ -368,7 +423,7 @@ public class Component : ObjectG
 	}
 
 	/**
-	 * Set the unique identifier for this component.
+	 * Get the unique identifier for this component.
 	 *
 	 * Return: the unique identifier.
 	 */
@@ -427,6 +482,29 @@ public class Component : ObjectG
 		}
 		
 		return new ListG(cast(GList*) p);
+	}
+
+	/**
+	 * Get the merge method which should apply to duplicate components
+	 * with this ID.
+	 *
+	 * Return: the #AsMergeKind of this component.
+	 *
+	 * Since: 0.9.8
+	 */
+	public AsMergeKind getMergeKind()
+	{
+		return as_component_get_merge_kind(asComponent);
+	}
+
+	/**
+	 * The license the metadata iself is subjected to.
+	 *
+	 * Return: the license.
+	 */
+	public string getMetadataLicense()
+	{
+		return Str.toString(as_component_get_metadata_license(asComponent));
 	}
 
 	/**
@@ -551,11 +629,47 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Returns all search tokens for this component.
+	 *
+	 * Return: The string search tokens
+	 *
+	 * Since: 0.9.7
+	 */
+	public PtrArray getSearchTokens()
+	{
+		auto p = as_component_get_search_tokens(asComponent);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
+	}
+
+	/**
 	 * Return: the source package name.
 	 */
 	public string getSourcePkgname()
 	{
 		return Str.toString(as_component_get_source_pkgname(asComponent));
+	}
+
+	/**
+	 * Get a list of associated suggestions.
+	 *
+	 * Return: an array of #AsSuggested instances
+	 */
+	public PtrArray getSuggested()
+	{
+		auto p = as_component_get_suggested(asComponent);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
@@ -652,6 +766,37 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Searches component data for a specific keyword.
+	 *
+	 * Params:
+	 *     term = the search term.
+	 *
+	 * Return: a match scrore, where 0 is no match and 100 is the best match.
+	 *
+	 * Since: 0.9.7
+	 */
+	public uint searchMatches(string term)
+	{
+		return as_component_search_matches(asComponent, Str.toStringz(term));
+	}
+
+	/**
+	 * Searches component data for all the specific keywords.
+	 *
+	 * Params:
+	 *     terms = the search terms.
+	 *
+	 * Return: a match score, where 0 is no match and larger numbers are better
+	 *     matches.
+	 *
+	 * Since: 0.9.8
+	 */
+	public uint searchMatchesAll(string[] terms)
+	{
+		return as_component_search_matches_all(asComponent, Str.toStringzArray(terms));
+	}
+
+	/**
 	 * Set the current active locale for this component, which
 	 * is used to get localized messages.
 	 * If the #AsComponent was fetched from a localized database, usually only
@@ -665,21 +810,15 @@ public class Component : ObjectG
 		as_component_set_active_locale(asComponent, Str.toStringz(locale));
 	}
 
-	/** */
-	public void setCategories(string[] value)
-	{
-		as_component_set_categories(asComponent, Str.toStringzArray(value));
-	}
-
 	/**
-	 * Set a list of desktops where this component is compulsory.
+	 * Mark this component to be compulsory for the specified desktop environment.
 	 *
 	 * Params:
-	 *     value = the array of desktop ids.
+	 *     desktop = The name of the desktop.
 	 */
-	public void setCompulsoryForDesktops(string[] value)
+	public void setCompulsoryForDesktop(string desktop)
 	{
-		as_component_set_compulsory_for_desktops(asComponent, Str.toStringzArray(value));
+		as_component_set_compulsory_for_desktop(asComponent, Str.toStringz(desktop));
 	}
 
 	/**
@@ -738,6 +877,30 @@ public class Component : ObjectG
 	public void setKind(AsComponentKind value)
 	{
 		as_component_set_kind(asComponent, value);
+	}
+
+	/**
+	 * Sets the #AsMergeKind for this component.
+	 *
+	 * Params:
+	 *     kind = the #AsMergeKind.
+	 *
+	 * Since: 0.9.8
+	 */
+	public void setMergeKind(AsMergeKind kind)
+	{
+		as_component_set_merge_kind(asComponent, kind);
+	}
+
+	/**
+	 * Set the license this metadata is licensed under.
+	 *
+	 * Params:
+	 *     value = the metadata license.
+	 */
+	public void setMetadataLicense(string value)
+	{
+		as_component_set_metadata_license(asComponent, Str.toStringz(value));
 	}
 
 	/**

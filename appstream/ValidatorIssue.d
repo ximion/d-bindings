@@ -87,6 +87,26 @@ public class ValidatorIssue : ObjectG
 	}
 
 	/**
+	 * The component-id this issue is about.
+	 *
+	 * Return: a component-id.
+	 */
+	public string getCid()
+	{
+		return Str.toString(as_validator_issue_get_cid(asValidatorIssue));
+	}
+
+	/**
+	 * The name of the file this issue was found in.
+	 *
+	 * Return: the filename
+	 */
+	public string getFilename()
+	{
+		return Str.toString(as_validator_issue_get_filename(asValidatorIssue));
+	}
+
+	/**
 	 * Gets the importance of this issue.
 	 *
 	 * Return: a #AsIssueImportance
@@ -107,9 +127,20 @@ public class ValidatorIssue : ObjectG
 	}
 
 	/**
-	 * Gets a location hint for the issue.
+	 * Gets the line number where this issue was found.
 	 *
-	 * Return: the location hint
+	 * Return: the line number where this issue occured, or -1 if unknown.
+	 */
+	public int getLine()
+	{
+		return as_validator_issue_get_line(asValidatorIssue);
+	}
+
+	/**
+	 * Builds a string containing all information about the location
+	 * where this issue occured that we know about.
+	 *
+	 * Return: the location hint as string.
 	 */
 	public string getLocation()
 	{
@@ -124,6 +155,28 @@ public class ValidatorIssue : ObjectG
 	public string getMessage()
 	{
 		return Str.toString(as_validator_issue_get_message(asValidatorIssue));
+	}
+
+	/**
+	 * Sets the component-id this issue is about.
+	 *
+	 * Params:
+	 *     cid = a component-id.
+	 */
+	public void setCid(string cid)
+	{
+		as_validator_issue_set_cid(asValidatorIssue, Str.toStringz(cid));
+	}
+
+	/**
+	 * Sets the name of the file the issue was found in.
+	 *
+	 * Params:
+	 *     fname = the filename.
+	 */
+	public void setFilename(string fname)
+	{
+		as_validator_issue_set_filename(asValidatorIssue, Str.toStringz(fname));
 	}
 
 	/**
@@ -149,14 +202,14 @@ public class ValidatorIssue : ObjectG
 	}
 
 	/**
-	 * Sets a location hint for this issue.
+	 * Sets the importance for this issue.
 	 *
 	 * Params:
-	 *     location = a location hint.
+	 *     line = the line number.
 	 */
-	public void setLocation(string location)
+	public void setLine(int line)
 	{
-		as_validator_issue_set_location(asValidatorIssue, Str.toStringz(location));
+		as_validator_issue_set_line(asValidatorIssue, line);
 	}
 
 	/**

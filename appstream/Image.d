@@ -133,6 +133,18 @@ public class Image : ObjectG
 	}
 
 	/**
+	 * Get locale for this image.
+	 *
+	 * Return: Locale string
+	 *
+	 * Since: 0.9.5
+	 */
+	public string getLocale()
+	{
+		return Str.toString(as_image_get_locale(asImage));
+	}
+
+	/**
 	 * Gets the full qualified URL for the image, usually pointing at some mirror.
 	 *
 	 * Return: URL
@@ -172,6 +184,19 @@ public class Image : ObjectG
 	public void setKind(AsImageKind kind)
 	{
 		as_image_set_kind(asImage, kind);
+	}
+
+	/**
+	 * Sets the locale for this image.
+	 *
+	 * Params:
+	 *     locale = the locale string.
+	 *
+	 * Since: 0.9.5
+	 */
+	public void setLocale(string locale)
+	{
+		as_image_set_locale(asImage, Str.toStringz(locale));
 	}
 
 	/**

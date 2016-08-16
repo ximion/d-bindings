@@ -94,8 +94,7 @@ public class Screenshot : ObjectG
 	 * Params:
 	 *     kind = the string.
 	 *
-	 * Return: a %AsScreenshotKind, or
-	 *     %AS_SCREENSHOT_KIND_UNKNOWN if not known.
+	 * Return: a %AsScreenshotKind, or %AS_SCREENSHOT_KIND_UNKNOWN if not known.
 	 */
 	public static AsScreenshotKind kindFromString(string kind)
 	{
@@ -153,6 +152,25 @@ public class Screenshot : ObjectG
 	public PtrArray getImages()
 	{
 		auto p = as_screenshot_get_images(asScreenshot);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
+	}
+
+	/**
+	 * Returns all images that are compatible with a specific locale.
+	 *
+	 * Return: an array
+	 *
+	 * Since: 0.9.5
+	 */
+	public PtrArray getImagesLocalized()
+	{
+		auto p = as_screenshot_get_images_localized(asScreenshot);
 		
 		if(p is null)
 		{
