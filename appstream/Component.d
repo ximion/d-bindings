@@ -20,6 +20,7 @@
 
 module appstream.Component;
 
+private import appstream.Category;
 private import appstream.Icon;
 private import appstream.Provided;
 private import appstream.Release;
@@ -524,6 +525,23 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Get the first package name of the list of packages that need to be installed
+	 * for this component to be present on the system.
+	 * Since most components consist of only one package, this is safe to use for
+	 * about 90% of all cases.
+	 *
+	 * However, to support a component fully, please use %as_component_get_pkgnames() for
+	 * getting all packages that need to be installed, and use this method only to
+	 * e.g. get the main package to perform a quick "is it installed?" check.
+	 *
+	 * Return: String array of package names
+	 */
+	public string getPkgname()
+	{
+		return Str.toString(as_component_get_pkgname(asComponent));
+	}
+
+	/**
 	 * Get a list of package names which this component consists of.
 	 * This usually is just one package name.
 	 *
@@ -760,6 +778,17 @@ public class Component : ObjectG
 	public bool isCompulsoryForDesktop(string desktop)
 	{
 		return as_component_is_compulsory_for_desktop(asComponent, Str.toStringz(desktop)) != 0;
+	}
+
+	/**
+	 * Test if the component @cpt is a member of category @category.
+	 *
+	 * Params:
+	 *     category = The category to test.
+	 */
+	public bool isMemberOfCategory(Category category)
+	{
+		return as_component_is_member_of_category(asComponent, (category is null) ? null : category.getCategoryStruct()) != 0;
 	}
 
 	/**

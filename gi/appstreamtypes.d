@@ -582,6 +582,10 @@ public enum AsValueFlags
 	 * Don't fall back to C when retrieving translated values.
 	 */
 	NO_TRANSLATION_FALLBACK = 1,
+	/**
+	 * Check for duplicates when adding items to list values.
+	 */
+	DUPLICATE_CHECK = 2,
 }
 alias AsValueFlags ValueFlags;
 
@@ -601,10 +605,6 @@ struct AsCategoryClass
 	extern(C) void function() AsReserved3;
 	/** */
 	extern(C) void function() AsReserved4;
-	/** */
-	extern(C) void function() AsReserved5;
-	/** */
-	extern(C) void function() AsReserved6;
 }
 
 struct AsComponent
@@ -679,28 +679,6 @@ struct AsImage
 }
 
 struct AsImageClass
-{
-	GObjectClass parentClass;
-	/** */
-	extern(C) void function() AsReserved1;
-	/** */
-	extern(C) void function() AsReserved2;
-	/** */
-	extern(C) void function() AsReserved3;
-	/** */
-	extern(C) void function() AsReserved4;
-	/** */
-	extern(C) void function() AsReserved5;
-	/** */
-	extern(C) void function() AsReserved6;
-}
-
-struct AsMenuParser
-{
-	GObject parentInstance;
-}
-
-struct AsMenuParserClass
 {
 	GObjectClass parentClass;
 	/** */

@@ -23,7 +23,7 @@ module appstream.Category;
 private import gi.appstream;
 public  import gi.appstreamtypes;
 private import glib.ConstructionException;
-private import glib.ListG;
+private import glib.PtrArray;
 private import glib.Str;
 private import gobject.ObjectG;
 
@@ -93,42 +93,50 @@ public class Category : ObjectG
 	 * Params:
 	 *     subcat = A subcategory to add.
 	 */
-	public void addSubcategory(Category subcat)
+	public void addChild(Category subcat)
 	{
-		as_category_add_subcategory(asCategory, (subcat is null) ? null : subcat.getCategoryStruct());
+		as_category_add_child(asCategory, (subcat is null) ? null : subcat.getCategoryStruct());
 	}
 
 	/**
-	 * Update incomplete category data with information from
-	 * "/usr/share/desktop-directories".
+	 * Add a desktop-file category to this #AsCategory.
+	 *
+	 * Params:
+	 *     groupName = A subcategory to add.
 	 */
-	public void complete()
+	public void addDesktopGroup(string groupName)
 	{
-		as_category_complete(asCategory);
+		as_category_add_desktop_group(asCategory, Str.toStringz(groupName));
 	}
 
 	/**
-	 * Get associated XDG directory name for this category,
-	 * in case one exists in "/usr/share/desktop-directories/".
+	 * Return: A list of subcategories.
 	 */
-	public string getDirectory()
+	public PtrArray getChildren()
 	{
-		return Str.toString(as_category_get_directory(asCategory));
-	}
-
-	/**
-	 * Return: A list of category names
-	 */
-	public ListG getExcluded()
-	{
-		auto p = as_category_get_excluded(asCategory);
+		auto p = as_category_get_children(asCategory);
 		
 		if(p is null)
 		{
 			return null;
 		}
 		
-		return new ListG(cast(GList*) p);
+		return new PtrArray(cast(GPtrArray*) p);
+	}
+
+	/**
+	 * Return: A list of desktop-file categories.
+	 */
+	public PtrArray getDesktopGroups()
+	{
+		auto p = as_category_get_desktop_groups(asCategory);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
@@ -140,24 +148,11 @@ public class Category : ObjectG
 	}
 
 	/**
-	 * Return: A list of category names
+	 * Get the ID of this category.
 	 */
-	public ListG getIncluded()
+	public string getId()
 	{
-		auto p = as_category_get_included(asCategory);
-		
-		if(p is null)
-		{
-			return null;
-		}
-		
-		return new ListG(cast(GList*) p);
-	}
-
-	/** */
-	public int getLevel()
-	{
-		return as_category_get_level(asCategory);
+		return Str.toString(as_category_get_id(asCategory));
 	}
 
 	/**
@@ -166,21 +161,6 @@ public class Category : ObjectG
 	public string getName()
 	{
 		return Str.toString(as_category_get_name(asCategory));
-	}
-
-	/**
-	 * Return: A list of subcategories.
-	 */
-	public ListG getSubcategories()
-	{
-		auto p = as_category_get_subcategories(asCategory);
-		
-		if(p is null)
-		{
-			return null;
-		}
-		
-		return new ListG(cast(GList*) p);
 	}
 
 	/**
@@ -196,9 +176,9 @@ public class Category : ObjectG
 	 *
 	 * Return: %TRUE if this category has any subcategory
 	 */
-	public bool hasSubcategory()
+	public bool hasChildren()
 	{
-		return as_category_has_subcategory(asCategory) != 0;
+		return as_category_has_children(asCategory) != 0;
 	}
 
 	/**
@@ -207,17 +187,9 @@ public class Category : ObjectG
 	 * Params:
 	 *     subcat = A subcategory to remove.
 	 */
-	public void removeSubcategory(Category subcat)
+	public void removeChild(Category subcat)
 	{
-		as_category_remove_subcategory(asCategory, (subcat is null) ? null : subcat.getCategoryStruct());
-	}
-
-	/**
-	 * Set associated XDG directory name for this category.
-	 */
-	public void setDirectory(string value)
-	{
-		as_category_set_directory(asCategory, Str.toStringz(value));
+		as_category_remove_child(asCategory, (subcat is null) ? null : subcat.getCategoryStruct());
 	}
 
 	/**
@@ -228,10 +200,12 @@ public class Category : ObjectG
 		as_category_set_icon(asCategory, Str.toStringz(value));
 	}
 
-	/** */
-	public void setLevel(int value)
+	/**
+	 * Set the ID of this category.
+	 */
+	public void setId(string id)
 	{
-		as_category_set_level(asCategory, value);
+		as_category_set_id(asCategory, Str.toStringz(id));
 	}
 
 	/**

@@ -33,21 +33,18 @@ __gshared extern(C)
 
 	GType as_category_get_type ();
 	AsCategory* as_category_new ();
-	void as_category_add_subcategory (AsCategory* cat, AsCategory* subcat);
-	void as_category_complete (AsCategory* cat);
-	const(char)* as_category_get_directory (AsCategory* cat);
-	GList* as_category_get_excluded (AsCategory* cat);
+	void as_category_add_child (AsCategory* cat, AsCategory* subcat);
+	void as_category_add_desktop_group (AsCategory* cat, const(char)* groupName);
+	GPtrArray* as_category_get_children (AsCategory* cat);
+	GPtrArray* as_category_get_desktop_groups (AsCategory* cat);
 	const(char)* as_category_get_icon (AsCategory* cat);
-	GList* as_category_get_included (AsCategory* cat);
-	int as_category_get_level (AsCategory* cat);
+	const(char)* as_category_get_id (AsCategory* cat);
 	const(char)* as_category_get_name (AsCategory* cat);
-	GList* as_category_get_subcategories (AsCategory* cat);
 	const(char)* as_category_get_summary (AsCategory* cat);
-	int as_category_has_subcategory (AsCategory* cat);
-	void as_category_remove_subcategory (AsCategory* cat, AsCategory* subcat);
-	void as_category_set_directory (AsCategory* cat, const(char)* value);
+	int as_category_has_children (AsCategory* cat);
+	void as_category_remove_child (AsCategory* cat, AsCategory* subcat);
 	void as_category_set_icon (AsCategory* cat, const(char)* value);
-	void as_category_set_level (AsCategory* cat, int value);
+	void as_category_set_id (AsCategory* cat, const(char)* id);
 	void as_category_set_name (AsCategory* cat, const(char)* value);
 	void as_category_set_summary (AsCategory* cat, const(char)* value);
 
@@ -87,6 +84,7 @@ __gshared extern(C)
 	const(char)* as_component_get_metadata_license (AsComponent* cpt);
 	const(char)* as_component_get_name (AsComponent* cpt);
 	const(char)* as_component_get_origin (AsComponent* cpt);
+	char* as_component_get_pkgname (AsComponent* cpt);
 	char** as_component_get_pkgnames (AsComponent* cpt);
 	const(char)* as_component_get_project_group (AsComponent* cpt);
 	const(char)* as_component_get_project_license (AsComponent* cpt);
@@ -104,6 +102,7 @@ __gshared extern(C)
 	int as_component_has_bundle (AsComponent* cpt);
 	int as_component_has_category (AsComponent* cpt, const(char)* category);
 	int as_component_is_compulsory_for_desktop (AsComponent* cpt, const(char)* desktop);
+	int as_component_is_member_of_category (AsComponent* cpt, AsCategory* category);
 	int as_component_is_valid (AsComponent* cpt);
 	uint as_component_search_matches (AsComponent* cpt, const(char)* term);
 	uint as_component_search_matches_all (AsComponent* cpt, char** terms);
@@ -171,15 +170,6 @@ __gshared extern(C)
 	void as_image_set_locale (AsImage* image, const(char)* locale);
 	void as_image_set_url (AsImage* image, const(char)* url);
 	void as_image_set_width (AsImage* image, uint width);
-
-	// appstream.MenuParser
-
-	GType as_menu_parser_get_type ();
-	AsMenuParser* as_menu_parser_new ();
-	AsMenuParser* as_menu_parser_new_from_file (const(char)* menuFile);
-	int as_menu_parser_get_update_category_data (AsMenuParser* mp);
-	GList* as_menu_parser_parse (AsMenuParser* mp);
-	void as_menu_parser_set_update_category_data (AsMenuParser* mp, int value);
 
 	// appstream.Metadata
 
