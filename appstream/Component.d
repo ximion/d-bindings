@@ -20,6 +20,7 @@
 
 module appstream.Component;
 
+private import appstream.Bundle;
 private import appstream.Category;
 private import appstream.Icon;
 private import appstream.Provided;
@@ -96,17 +97,16 @@ public class Component : ObjectG
 	}
 
 	/**
-	 * Adds a bundle identifier to the component.
+	 * Adds a bundle to the component.
 	 *
 	 * Params:
-	 *     bundleKind = the URL kind, e.g. %AS_BUNDLE_KIND_LIMBA
-	 *     id = The bundle identification string
+	 *     bundle = The #AsBundle to add.
 	 *
 	 * Since: 0.8.0
 	 */
-	public void addBundleId(AsBundleKind bundleKind, string id)
+	public void addBundle(Bundle bundle)
 	{
-		as_component_add_bundle_id(asComponent, bundleKind, Str.toStringz(id));
+		as_component_add_bundle(asComponent, (bundle is null) ? null : bundle.getBundleStruct());
 	}
 
 	/**
@@ -262,13 +262,20 @@ public class Component : ObjectG
 	 * Params:
 	 *     bundleKind = the bundle kind, e.g. %AS_BUNDLE_KIND_LIMBA.
 	 *
-	 * Return: string, or %NULL if unset
+	 * Return: An #AsBundle, or %NULL if not set.
 	 *
 	 * Since: 0.8.0
 	 */
-	public string getBundleId(AsBundleKind bundleKind)
+	public Bundle getBundle(AsBundleKind bundleKind)
 	{
-		return Str.toString(as_component_get_bundle_id(asComponent, bundleKind));
+		auto p = as_component_get_bundle(asComponent, bundleKind);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return ObjectG.getDObject!(Bundle)(cast(AsBundle*) p);
 	}
 
 	/**
@@ -299,6 +306,25 @@ public class Component : ObjectG
 		}
 		
 		return new PtrArray(cast(GPtrArray*) p);
+	}
+
+	/**
+	 * Get a unique identifier for this metadata set.
+	 * This unique ID is only valid for the current session,
+	 * as opposed to the AppStream ID which uniquely identifies
+	 * a software component.
+	 *
+	 * The format of the unique id usually is:
+	 * %{scope}/%{origin_type}/%{appstream_id}
+	 *
+	 * For example:
+	 * system/distributor/org.example.FooBar
+	 *
+	 * Return: the unique session-specific identifier.
+	 */
+	public string getDataId()
+	{
+		return Str.toString(as_component_get_data_id(asComponent));
 	}
 
 	/**
@@ -424,9 +450,14 @@ public class Component : ObjectG
 	}
 
 	/**
-	 * Get the unique identifier for this component.
+	 * Get the unique AppStream identifier for this component.
+	 * This ID is unique for the described component, but does
+	 * not uniquely identify the metadata set.
 	 *
-	 * Return: the unique identifier.
+	 * For a unique ID for this metadata set in the current
+	 * session, use %as_component_get_data_id()
+	 *
+	 * Return: the unique AppStream identifier.
 	 */
 	public string getId()
 	{
@@ -577,7 +608,7 @@ public class Component : ObjectG
 	 *
 	 * Return: A list of #AsProvided objects.
 	 */
-	public ListG getProvided()
+	public PtrArray getProvided()
 	{
 		auto p = as_component_get_provided(asComponent);
 		
@@ -586,7 +617,7 @@ public class Component : ObjectG
 			return null;
 		}
 		
-		return new ListG(cast(GList*) p);
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
@@ -747,7 +778,7 @@ public class Component : ObjectG
 	}
 
 	/**
-	 * Return: %TRUE if this component has a bundle-id associated.
+	 * Return: %TRUE if this component has a bundle associated.
 	 */
 	public bool hasBundle()
 	{
@@ -859,6 +890,21 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Set the session-specific unique metadata identifier for this
+	 * component.
+	 * If two components have a different data_id but the same ID,
+	 * they will be treated as independent sets of metadata describing
+	 * the same component type.
+	 *
+	 * Params:
+	 *     value = the unique session-specific identifier.
+	 */
+	public void setDataId(string value)
+	{
+		as_component_set_data_id(asComponent, Str.toStringz(value));
+	}
+
+	/**
 	 * Set long description for this component.
 	 *
 	 * Params:
@@ -883,7 +929,7 @@ public class Component : ObjectG
 	}
 
 	/**
-	 * Set the unique identifier for this component.
+	 * Set the AppStream identifier for this component.
 	 *
 	 * Params:
 	 *     value = the unique identifier.

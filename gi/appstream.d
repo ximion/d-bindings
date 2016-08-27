@@ -29,30 +29,55 @@ import gi.giotypes;
 __gshared extern(C)
 {
 
+	// appstream.Bundle
+
+	GType as_bundle_get_type ();
+	AsBundle* as_bundle_new ();
+	AsBundleKind as_bundle_kind_from_string (const(char)* bundleKind);
+	const(char)* as_bundle_kind_to_string (AsBundleKind bundleKind);
+	const(char)* as_bundle_get_id (AsBundle* bundle);
+	AsBundleKind as_bundle_get_kind (AsBundle* bundle);
+	void as_bundle_set_id (AsBundle* bundle, const(char)* id);
+	void as_bundle_set_kind (AsBundle* bundle, AsBundleKind kind);
+
 	// appstream.Category
 
 	GType as_category_get_type ();
 	AsCategory* as_category_new ();
-	void as_category_add_child (AsCategory* cat, AsCategory* subcat);
-	void as_category_add_desktop_group (AsCategory* cat, const(char)* groupName);
-	GPtrArray* as_category_get_children (AsCategory* cat);
-	GPtrArray* as_category_get_desktop_groups (AsCategory* cat);
-	const(char)* as_category_get_icon (AsCategory* cat);
-	const(char)* as_category_get_id (AsCategory* cat);
-	const(char)* as_category_get_name (AsCategory* cat);
-	const(char)* as_category_get_summary (AsCategory* cat);
-	int as_category_has_children (AsCategory* cat);
-	void as_category_remove_child (AsCategory* cat, AsCategory* subcat);
-	void as_category_set_icon (AsCategory* cat, const(char)* value);
-	void as_category_set_id (AsCategory* cat, const(char)* id);
-	void as_category_set_name (AsCategory* cat, const(char)* value);
-	void as_category_set_summary (AsCategory* cat, const(char)* value);
+	void as_category_add_child (AsCategory* category, AsCategory* subcat);
+	void as_category_add_component (AsCategory* category, AsComponent* cpt);
+	void as_category_add_desktop_group (AsCategory* category, const(char)* groupName);
+	GPtrArray* as_category_get_children (AsCategory* category);
+	GPtrArray* as_category_get_components (AsCategory* category);
+	GPtrArray* as_category_get_desktop_groups (AsCategory* category);
+	const(char)* as_category_get_icon (AsCategory* category);
+	const(char)* as_category_get_id (AsCategory* category);
+	const(char)* as_category_get_name (AsCategory* category);
+	const(char)* as_category_get_summary (AsCategory* category);
+	int as_category_has_children (AsCategory* category);
+	int as_category_has_component (AsCategory* category, AsComponent* cpt);
+	void as_category_remove_child (AsCategory* category, AsCategory* subcat);
+	void as_category_set_icon (AsCategory* category, const(char)* value);
+	void as_category_set_id (AsCategory* category, const(char)* id);
+	void as_category_set_name (AsCategory* category, const(char)* value);
+	void as_category_set_summary (AsCategory* category, const(char)* value);
+
+	// appstream.Checksum
+
+	GType as_checksum_get_type ();
+	AsChecksum* as_checksum_new ();
+	AsChecksumKind as_checksum_kind_from_string (const(char)* kindStr);
+	const(char)* as_checksum_kind_to_string (AsChecksumKind kind);
+	AsChecksumKind as_checksum_get_kind (AsChecksum* cs);
+	const(char)* as_checksum_get_value (AsChecksum* cs);
+	void as_checksum_set_kind (AsChecksum* cs, AsChecksumKind kind);
+	void as_checksum_set_value (AsChecksum* cs, const(char)* value);
 
 	// appstream.Component
 
 	GType as_component_get_type ();
 	AsComponent* as_component_new ();
-	void as_component_add_bundle_id (AsComponent* cpt, AsBundleKind bundleKind, const(char)* id);
+	void as_component_add_bundle (AsComponent* cpt, AsBundle* bundle);
 	void as_component_add_category (AsComponent* cpt, const(char)* category);
 	void as_component_add_extends (AsComponent* cpt, const(char)* cptId);
 	void as_component_add_extension (AsComponent* cpt, const(char)* cptId);
@@ -65,9 +90,10 @@ __gshared extern(C)
 	void as_component_add_translation (AsComponent* cpt, AsTranslation* tr);
 	void as_component_add_url (AsComponent* cpt, AsUrlKind urlKind, const(char)* url);
 	char* as_component_get_active_locale (AsComponent* cpt);
-	const(char)* as_component_get_bundle_id (AsComponent* cpt, AsBundleKind bundleKind);
+	AsBundle* as_component_get_bundle (AsComponent* cpt, AsBundleKind bundleKind);
 	GPtrArray* as_component_get_categories (AsComponent* cpt);
 	GPtrArray* as_component_get_compulsory_for_desktops (AsComponent* cpt);
+	const(char)* as_component_get_data_id (AsComponent* cpt);
 	const(char)* as_component_get_description (AsComponent* cpt);
 	const(char)* as_component_get_desktop_id (AsComponent* cpt);
 	const(char)* as_component_get_developer_name (AsComponent* cpt);
@@ -88,7 +114,7 @@ __gshared extern(C)
 	char** as_component_get_pkgnames (AsComponent* cpt);
 	const(char)* as_component_get_project_group (AsComponent* cpt);
 	const(char)* as_component_get_project_license (AsComponent* cpt);
-	GList* as_component_get_provided (AsComponent* cpt);
+	GPtrArray* as_component_get_provided (AsComponent* cpt);
 	AsProvided* as_component_get_provided_for_kind (AsComponent* cpt, AsProvidedKind kind);
 	GPtrArray* as_component_get_releases (AsComponent* cpt);
 	GPtrArray* as_component_get_screenshots (AsComponent* cpt);
@@ -108,6 +134,7 @@ __gshared extern(C)
 	uint as_component_search_matches_all (AsComponent* cpt, char** terms);
 	void as_component_set_active_locale (AsComponent* cpt, const(char)* locale);
 	void as_component_set_compulsory_for_desktop (AsComponent* cpt, const(char)* desktop);
+	void as_component_set_data_id (AsComponent* cpt, const(char)* value);
 	void as_component_set_description (AsComponent* cpt, const(char)* value, const(char)* locale);
 	void as_component_set_developer_name (AsComponent* cpt, const(char)* value, const(char)* locale);
 	void as_component_set_id (AsComponent* cpt, const(char)* value);
@@ -178,9 +205,8 @@ __gshared extern(C)
 	GQuark as_metadata_error_quark ();
 	void as_metadata_add_component (AsMetadata* metad, AsComponent* cpt);
 	void as_metadata_clear_components (AsMetadata* metad);
-	char* as_metadata_component_to_upstream_xml (AsMetadata* metad);
-	char* as_metadata_components_to_distro_xml (AsMetadata* metad);
-	char* as_metadata_components_to_distro_yaml (AsMetadata* metad);
+	char* as_metadata_component_to_metainfo (AsMetadata* metad, AsDataFormat format, GError** err);
+	char* as_metadata_components_to_collection (AsMetadata* metad, AsDataFormat format, GError** err);
 	const(char)* as_metadata_get_architecture (AsMetadata* metad);
 	AsComponent* as_metadata_get_component (AsMetadata* metad);
 	GPtrArray* as_metadata_get_components (AsMetadata* metad);
@@ -189,12 +215,10 @@ __gshared extern(C)
 	AsParserMode as_metadata_get_parser_mode (AsMetadata* metad);
 	int as_metadata_get_update_existing (AsMetadata* metad);
 	int as_metadata_get_write_header (AsMetadata* metad);
-	void as_metadata_parse_file (AsMetadata* metad, GFile* file, GError** err);
-	void as_metadata_parse_xml (AsMetadata* metad, const(char)* data, GError** err);
-	void as_metadata_parse_yaml (AsMetadata* metad, const(char)* data, GError** err);
-	void as_metadata_save_distro_xml (AsMetadata* metad, const(char)* fname, GError** err);
-	void as_metadata_save_distro_yaml (AsMetadata* metad, const(char)* fname, GError** err);
-	void as_metadata_save_upstream_xml (AsMetadata* metad, const(char)* fname, GError** err);
+	void as_metadata_parse (AsMetadata* metad, const(char)* data, AsDataFormat format, GError** err);
+	void as_metadata_parse_file (AsMetadata* metad, GFile* file, AsDataFormat format, GError** err);
+	void as_metadata_save_collection (AsMetadata* metad, const(char)* fname, AsDataFormat format, GError** err);
+	void as_metadata_save_metainfo (AsMetadata* metad, const(char)* fname, AsDataFormat format, GError** err);
 	void as_metadata_set_architecture (AsMetadata* metad, const(char)* arch);
 	void as_metadata_set_locale (AsMetadata* metad, const(char)* locale);
 	void as_metadata_set_origin (AsMetadata* metad, const(char)* origin);
@@ -211,7 +235,7 @@ __gshared extern(C)
 	void as_pool_clear (AsPool* pool);
 	uint as_pool_get_cache_age (AsPool* pool);
 	AsCacheFlags as_pool_get_cache_flags (AsPool* pool);
-	AsComponent* as_pool_get_component_by_id (AsPool* pool, const(char)* id);
+	GPtrArray* as_pool_get_component_by_id (AsPool* pool, const(char)* cid);
 	GPtrArray* as_pool_get_components (AsPool* pool);
 	GPtrArray* as_pool_get_components_by_categories (AsPool* pool, const(char)* categories);
 	GPtrArray* as_pool_get_components_by_kind (AsPool* pool, AsComponentKind kind, GError** err);
@@ -236,7 +260,7 @@ __gshared extern(C)
 	const(char)* as_provided_kind_to_l10n_string (AsProvidedKind kind);
 	const(char)* as_provided_kind_to_string (AsProvidedKind kind);
 	void as_provided_add_item (AsProvided* prov, const(char)* item);
-	char** as_provided_get_items (AsProvided* prov);
+	GPtrArray* as_provided_get_items (AsProvided* prov);
 	AsProvidedKind as_provided_get_kind (AsProvided* prov);
 	int as_provided_has_item (AsProvided* prov, const(char)* item);
 	void as_provided_set_kind (AsProvided* prov, AsProvidedKind kind);
@@ -245,9 +269,11 @@ __gshared extern(C)
 
 	GType as_release_get_type ();
 	AsRelease* as_release_new ();
+	void as_release_add_checksum (AsRelease* release, AsChecksum* cs);
 	void as_release_add_location (AsRelease* release, const(char)* location);
 	char* as_release_get_active_locale (AsRelease* release);
-	const(char)* as_release_get_checksum (AsRelease* release, AsChecksumKind kind);
+	AsChecksum* as_release_get_checksum (AsRelease* release, AsChecksumKind kind);
+	GPtrArray* as_release_get_checksums (AsRelease* release);
 	const(char)* as_release_get_description (AsRelease* release);
 	GPtrArray* as_release_get_locations (AsRelease* release);
 	ulong as_release_get_size (AsRelease* release, AsSizeKind kind);
@@ -255,12 +281,12 @@ __gshared extern(C)
 	AsUrgencyKind as_release_get_urgency (AsRelease* release);
 	const(char)* as_release_get_version (AsRelease* release);
 	void as_release_set_active_locale (AsRelease* release, const(char)* locale);
-	void as_release_set_checksum (AsRelease* release, const(char)* checksum, AsChecksumKind kind);
 	void as_release_set_description (AsRelease* release, const(char)* description, const(char)* locale);
 	void as_release_set_size (AsRelease* release, ulong size, AsSizeKind kind);
 	void as_release_set_timestamp (AsRelease* release, ulong timestamp);
 	void as_release_set_urgency (AsRelease* release, AsUrgencyKind urgency);
 	void as_release_set_version (AsRelease* release, const(char)* versio);
+	int as_release_vercmp (AsRelease* rel1, AsRelease* rel2);
 
 	// appstream.Screenshot
 
@@ -272,7 +298,7 @@ __gshared extern(C)
 	char* as_screenshot_get_active_locale (AsScreenshot* screenshot);
 	const(char)* as_screenshot_get_caption (AsScreenshot* screenshot);
 	GPtrArray* as_screenshot_get_images (AsScreenshot* screenshot);
-	GPtrArray* as_screenshot_get_images_localized (AsScreenshot* screenshot);
+	GPtrArray* as_screenshot_get_images_all (AsScreenshot* screenshot);
 	AsScreenshotKind as_screenshot_get_kind (AsScreenshot* screenshot);
 	int as_screenshot_is_valid (AsScreenshot* screenshot);
 	void as_screenshot_set_active_locale (AsScreenshot* screenshot, const(char)* locale);

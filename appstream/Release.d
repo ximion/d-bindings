@@ -20,6 +20,7 @@
 
 module appstream.Release;
 
+private import appstream.Checksum;
 private import gi.appstream;
 public  import gi.appstreamtypes;
 private import glib.ConstructionException;
@@ -88,6 +89,19 @@ public class Release : ObjectG
 	}
 
 	/**
+	 * Add a checksum for the file associated with this release.
+	 *
+	 * Params:
+	 *     cs = The #AsChecksum.
+	 *
+	 * Since: 0.8.2
+	 */
+	public void addChecksum(Checksum cs)
+	{
+		as_release_add_checksum(asRelease, (cs is null) ? null : cs.getChecksumStruct());
+	}
+
+	/**
 	 * Adds a release location.
 	 *
 	 * Params:
@@ -112,13 +126,39 @@ public class Release : ObjectG
 	/**
 	 * Gets the release checksum
 	 *
-	 * Return: string, or %NULL for not set or invalid
+	 * Return: an #AsChecksum, or %NULL for not set or invalid
 	 *
 	 * Since: 0.8.2
 	 */
-	public string getChecksum(AsChecksumKind kind)
+	public Checksum getChecksum(AsChecksumKind kind)
 	{
-		return Str.toString(as_release_get_checksum(asRelease, kind));
+		auto p = as_release_get_checksum(asRelease, kind);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return ObjectG.getDObject!(Checksum)(cast(AsChecksum*) p);
+	}
+
+	/**
+	 * Get a list of all checksums we have for this release.
+	 *
+	 * Return: an array of #AsChecksum objects.
+	 *
+	 * Since: 0.10
+	 */
+	public PtrArray getChecksums()
+	{
+		auto p = as_release_get_checksums(asRelease);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
@@ -211,20 +251,6 @@ public class Release : ObjectG
 	}
 
 	/**
-	 * Set the release checksum.
-	 *
-	 * Params:
-	 *     checksum = The checksum as string.
-	 *     kind = The kind of this checksum, e.g. %AS_CHECKSUM_KIND_SHA256
-	 *
-	 * Since: 0.8.2
-	 */
-	public void setChecksum(string checksum, AsChecksumKind kind)
-	{
-		as_release_set_checksum(asRelease, Str.toStringz(checksum), kind);
-	}
-
-	/**
 	 * Sets the description release markup.
 	 *
 	 * Params:
@@ -282,5 +308,18 @@ public class Release : ObjectG
 	public void setVersion(string versio)
 	{
 		as_release_set_version(asRelease, Str.toStringz(versio));
+	}
+
+	/**
+	 * Compare the version numbers of two releases.
+	 *
+	 * Params:
+	 *     rel2 = an #AsRelease
+	 *
+	 * Return: 1 if @rel1 version is higher than @rel2, 0 if versions are equal, -1 if @rel1 version is higher than @rel2.
+	 */
+	public int vercmp(Release rel2)
+	{
+		return as_release_vercmp(asRelease, (rel2 is null) ? null : rel2.getReleaseStruct());
 	}
 }

@@ -20,6 +20,7 @@
 
 module appstream.Category;
 
+private import appstream.Component;
 private import gi.appstream;
 public  import gi.appstreamtypes;
 private import glib.ConstructionException;
@@ -99,6 +100,17 @@ public class Category : ObjectG
 	}
 
 	/**
+	 * Add a component to this category.
+	 *
+	 * Params:
+	 *     cpt = The #AsComponent to add.
+	 */
+	public void addComponent(Component cpt)
+	{
+		as_category_add_component(asCategory, (cpt is null) ? null : cpt.getComponentStruct());
+	}
+
+	/**
 	 * Add a desktop-file category to this #AsCategory.
 	 *
 	 * Params:
@@ -115,6 +127,23 @@ public class Category : ObjectG
 	public PtrArray getChildren()
 	{
 		auto p = as_category_get_children(asCategory);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
+	}
+
+	/**
+	 * Get list of components which have been sorted into this category.
+	 *
+	 * Return: List of #AsCategory
+	 */
+	public PtrArray getComponents()
+	{
+		auto p = as_category_get_components(asCategory);
 		
 		if(p is null)
 		{
@@ -179,6 +208,20 @@ public class Category : ObjectG
 	public bool hasChildren()
 	{
 		return as_category_has_children(asCategory) != 0;
+	}
+
+	/**
+	 * Check if the exact #AsComponent @cpt is a member of this
+	 * category already.
+	 *
+	 * Params:
+	 *     cpt = The #AsComponent to look for.
+	 *
+	 * Return: %TRUE if the component is present.
+	 */
+	public bool hasComponent(Component cpt)
+	{
+		return as_category_has_component(asCategory, (cpt is null) ? null : cpt.getComponentStruct()) != 0;
 	}
 
 	/**

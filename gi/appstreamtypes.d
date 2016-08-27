@@ -34,13 +34,17 @@ public enum AsBundleKind
 	 */
 	UNKNOWN = 0,
 	/**
+	 * A native package (currently not used)
+	 */
+	PACKAGE = 1,
+	/**
 	 * A Limba bundle
 	 */
-	LIMBA = 1,
+	LIMBA = 2,
 	/**
 	 * A Flatpak bundle
 	 */
-	FLATPAK = 2,
+	FLATPAK = 3,
 }
 alias AsBundleKind BundleKind;
 
@@ -132,6 +136,26 @@ public enum AsComponentKind
 	LAST = 10,
 }
 alias AsComponentKind ComponentKind;
+
+/**
+ * Format of the AppStream metadata.
+ */
+public enum AsDataFormat
+{
+	/**
+	 * Unknown metadata format.
+	 */
+	UNKNOWN = 0,
+	/**
+	 * AppStream XML metadata.
+	 */
+	XML = 1,
+	/**
+	 * AppStream YAML (DEP-11) metadata.
+	 */
+	YAML = 2,
+}
+alias AsDataFormat DataFormat;
 
 /**
  * The icon type.
@@ -309,9 +333,9 @@ public enum AsMetadataError
 	 */
 	PARSE = 1,
 	/**
-	 * Expected upstream metadata but got distro metadata, or vice versa.
+	 * Expected collection metadata but got metainfo metadata, or vice versa.
 	 */
-	UNEXPECTED_FORMAT_KIND = 2,
+	FORMAT_UNEXPECTED = 2,
 	/**
 	 * We expected a component in the pool, but couldn't find one.
 	 */
@@ -320,21 +344,21 @@ public enum AsMetadataError
 alias AsMetadataError MetadataError;
 
 /**
- * There are a few differences between Appstream's upstream metadata
- * and the distribution metadata.
+ * There are a few differences between AppStream's metainfo files (shipped by upstream projects)
+ * and the collection metadata (shipped by distributors).
  * The parser mode indicates which style we should process.
- * Usually you don't want to change this.
+ * Usually you do not want to set this explicitly.
  */
 public enum AsParserMode
 {
 	/**
-	 * Parse Appstream upstream metadata
+	 * Parse AppStream upstream metadata (metainfo files)
 	 */
-	UPSTREAM = 0,
+	METAINFO = 0,
 	/**
-	 * Parse Appstream distribution metadata
+	 * Parse AppStream metadata collections (shipped by software distributors)
 	 */
-	DISTRO = 1,
+	COLLECTION = 1,
 }
 alias AsParserMode ParserMode;
 
@@ -589,6 +613,28 @@ public enum AsValueFlags
 }
 alias AsValueFlags ValueFlags;
 
+struct AsBundle
+{
+	GObject parentInstance;
+}
+
+struct AsBundleClass
+{
+	GObjectClass parentClass;
+	/** */
+	extern(C) void function() AsReserved1;
+	/** */
+	extern(C) void function() AsReserved2;
+	/** */
+	extern(C) void function() AsReserved3;
+	/** */
+	extern(C) void function() AsReserved4;
+	/** */
+	extern(C) void function() AsReserved5;
+	/** */
+	extern(C) void function() AsReserved6;
+}
+
 struct AsCategory
 {
 	GObject parentInstance;
@@ -605,6 +651,28 @@ struct AsCategoryClass
 	extern(C) void function() AsReserved3;
 	/** */
 	extern(C) void function() AsReserved4;
+}
+
+struct AsChecksum
+{
+	GObject parentInstance;
+}
+
+struct AsChecksumClass
+{
+	GObjectClass parentClass;
+	/** */
+	extern(C) void function() AsReserved1;
+	/** */
+	extern(C) void function() AsReserved2;
+	/** */
+	extern(C) void function() AsReserved3;
+	/** */
+	extern(C) void function() AsReserved4;
+	/** */
+	extern(C) void function() AsReserved5;
+	/** */
+	extern(C) void function() AsReserved6;
 }
 
 struct AsComponent

@@ -145,7 +145,8 @@ public class Screenshot : ObjectG
 	}
 
 	/**
-	 * Gets the image sizes included in the screenshot.
+	 * Gets the images for this screenshots. Only images valid for the current
+	 * language are returned. We return all sizes.
 	 *
 	 * Return: an array
 	 */
@@ -162,15 +163,16 @@ public class Screenshot : ObjectG
 	}
 
 	/**
-	 * Returns all images that are compatible with a specific locale.
+	 * Returns an array of all images we have, regardless of their
+	 * size and language.
 	 *
 	 * Return: an array
 	 *
-	 * Since: 0.9.5
+	 * Since: 0.10
 	 */
-	public PtrArray getImagesLocalized()
+	public PtrArray getImagesAll()
 	{
-		auto p = as_screenshot_get_images_localized(asScreenshot);
+		auto p = as_screenshot_get_images_all(asScreenshot);
 		
 		if(p is null)
 		{

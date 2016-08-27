@@ -23,6 +23,7 @@ module appstream.Provided;
 private import gi.appstream;
 public  import gi.appstreamtypes;
 private import glib.ConstructionException;
+private import glib.PtrArray;
 private import glib.Str;
 private import gobject.ObjectG;
 
@@ -141,9 +142,16 @@ public class Provided : ObjectG
 	 *
 	 * Return: An utf-8 array of provided items, free with g_free()
 	 */
-	public string[] getItems()
+	public PtrArray getItems()
 	{
-		return Str.toStringArray(as_provided_get_items(asProvided));
+		auto p = as_provided_get_items(asProvided);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**

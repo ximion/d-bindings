@@ -116,42 +116,60 @@ public class Metadata : ObjectG
 	}
 
 	/**
-	 * Convert an #AsComponent to upstream XML.
-	 * (The amount of localization included in the metadata depends on how the #AsComponent
-	 * was initially loaded)
+	 * Convert an #AsComponent to metainfo data.
+	 * This will always be XML, YAML is no valid format for metainfo files.
+	 *
+	 * The amount of localization included in the metadata depends on how the #AsComponent
+	 * was initially loaded and whether it contains data for all locale.
 	 *
 	 * The first #AsComponent added to the internal list will be transformed.
 	 * In case no component is present, %NULL is returned.
 	 *
-	 * Return: A string containing the XML. Free with g_free()
+	 * Params:
+	 *     format = The format to use (XML or YAML)
+	 *
+	 * Return: A string containing the XML metadata. Free with g_free()
+	 *
+	 * Throws: GException on failure.
 	 */
-	public string componentToUpstreamXml()
+	public string componentToMetainfo(AsDataFormat format)
 	{
-		return Str.toString(as_metadata_component_to_upstream_xml(asMetadata));
+		GError* err = null;
+		
+		auto p = as_metadata_component_to_metainfo(asMetadata, format, &err);
+		
+		if (err !is null)
+		{
+			throw new GException( new ErrorG(err) );
+		}
+		
+		return Str.toString(p);
 	}
 
 	/**
 	 * Serialize all #AsComponent instances into AppStream
-	 * distro-XML data.
+	 * collection metadata.
 	 * %NULL is returned if there is nothing to serialize.
 	 *
-	 * Return: A string containing the XML. Free with g_free()
-	 */
-	public string componentsToDistroXml()
-	{
-		return Str.toString(as_metadata_components_to_distro_xml(asMetadata));
-	}
-
-	/**
-	 * Serialize all #AsComponent instances into AppStream DEP-11
-	 * distro-YAML data.
-	 * %NULL is returned if there is nothing to serialize.
+	 * Params:
+	 *     format = The format to serialize the data to (XML or YAML).
 	 *
-	 * Return: A string containing the YAML markup. Free with g_free()
+	 * Return: A string containing the YAML or XML data. Free with g_free()
+	 *
+	 * Throws: GException on failure.
 	 */
-	public string componentsToDistroYaml()
+	public string componentsToCollection(AsDataFormat format)
 	{
-		return Str.toString(as_metadata_components_to_distro_yaml(asMetadata));
+		GError* err = null;
+		
+		auto p = as_metadata_components_to_collection(asMetadata, format, &err);
+		
+		if (err !is null)
+		{
+			throw new GException( new ErrorG(err) );
+		}
+		
+		return Str.toString(p);
 	}
 
 	/**
@@ -235,11 +253,24 @@ public class Metadata : ObjectG
 	}
 
 	/**
-	 * Return: Whether we will write a header/root node in distro metadata.
+	 * Return: Whether we will write a header/root node in collection metadata.
 	 */
 	public bool getWriteHeader()
 	{
 		return as_metadata_get_write_header(asMetadata) != 0;
+	}
+
+	/** */
+	public void parse(string data, AsDataFormat format)
+	{
+		GError* err = null;
+		
+		as_metadata_parse(asMetadata, Str.toStringz(data), format, &err);
+		
+		if (err !is null)
+		{
+			throw new GException( new ErrorG(err) );
+		}
 	}
 
 	/**
@@ -247,14 +278,15 @@ public class Metadata : ObjectG
 	 *
 	 * Params:
 	 *     file = #GFile for the upstream metadata
+	 *     format = The format the data is in, or %AS_DATA_FORMAT_UNKNOWN if not known.
 	 *
 	 * Throws: GException on failure.
 	 */
-	public void parseFile(FileIF file)
+	public void parseFile(FileIF file, AsDataFormat format)
 	{
 		GError* err = null;
 		
-		as_metadata_parse_file(asMetadata, (file is null) ? null : file.getFileStruct(), &err);
+		as_metadata_parse_file(asMetadata, (file is null) ? null : file.getFileStruct(), format, &err);
 		
 		if (err !is null)
 		{
@@ -262,81 +294,12 @@ public class Metadata : ObjectG
 		}
 	}
 
-	/**
-	 * Parses AppStream XML metadata.
-	 *
-	 * Params:
-	 *     data = XML data describing one or more software components.
-	 *
-	 * Throws: GException on failure.
-	 */
-	public void parseXml(string data)
+	/** */
+	public void saveCollection(string fname, AsDataFormat format)
 	{
 		GError* err = null;
 		
-		as_metadata_parse_xml(asMetadata, Str.toStringz(data), &err);
-		
-		if (err !is null)
-		{
-			throw new GException( new ErrorG(err) );
-		}
-	}
-
-	/**
-	 * Parses AppStream YAML metadata.
-	 *
-	 * Params:
-	 *     data = YAML data describing one or more software components.
-	 *
-	 * Throws: GException on failure.
-	 */
-	public void parseYaml(string data)
-	{
-		GError* err = null;
-		
-		as_metadata_parse_yaml(asMetadata, Str.toStringz(data), &err);
-		
-		if (err !is null)
-		{
-			throw new GException( new ErrorG(err) );
-		}
-	}
-
-	/**
-	 * Serialize all #AsComponent instances to XML and save the data to a file.
-	 * An existing file at the same location will be overridden.
-	 *
-	 * Params:
-	 *     fname = The filename for the new XML file.
-	 *
-	 * Throws: GException on failure.
-	 */
-	public void saveDistroXml(string fname)
-	{
-		GError* err = null;
-		
-		as_metadata_save_distro_xml(asMetadata, Str.toStringz(fname), &err);
-		
-		if (err !is null)
-		{
-			throw new GException( new ErrorG(err) );
-		}
-	}
-
-	/**
-	 * Serialize all #AsComponent instances to XML and save the data to a file.
-	 * An existing file at the same location will be overridden.
-	 *
-	 * Params:
-	 *     fname = The filename for the new YAML file.
-	 *
-	 * Throws: GException on failure.
-	 */
-	public void saveDistroYaml(string fname)
-	{
-		GError* err = null;
-		
-		as_metadata_save_distro_yaml(asMetadata, Str.toStringz(fname), &err);
+		as_metadata_save_collection(asMetadata, Str.toStringz(fname), format, &err);
 		
 		if (err !is null)
 		{
@@ -349,15 +312,16 @@ public class Metadata : ObjectG
 	 * An existing file at the same location will be overridden.
 	 *
 	 * Params:
-	 *     fname = The filename for the new XML file.
+	 *     fname = The filename for the new metadata file.
+	 *     format = The format to save this file in. Only XML is supported at time.
 	 *
 	 * Throws: GException on failure.
 	 */
-	public void saveUpstreamXml(string fname)
+	public void saveMetainfo(string fname, AsDataFormat format)
 	{
 		GError* err = null;
 		
-		as_metadata_save_upstream_xml(asMetadata, Str.toStringz(fname), &err);
+		as_metadata_save_metainfo(asMetadata, Str.toStringz(fname), format, &err);
 		
 		if (err !is null)
 		{
@@ -431,7 +395,7 @@ public class Metadata : ObjectG
 	 * header document when in YAML mode, and will not write a root components node
 	 * when writing XML data.
 	 * Please keep in mind that this will create an invalid DEP-11 YAML AppStream
-	 * distro metadata file, and an invalid XML file.
+	 * collection metadata file, and an invalid XML file.
 	 * This parameter should only be changed e.g. by the appstream-generator tool.
 	 *
 	 * NOTE: Right now, this feature is only implemented for YAML!

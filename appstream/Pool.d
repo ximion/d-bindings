@@ -149,22 +149,24 @@ public class Pool : ObjectG
 
 	/**
 	 * Get a specific component by its ID.
+	 * This function may contain multiple results if we have
+	 * data describing this component from multiple scopes/origin types.
 	 *
 	 * Params:
-	 *     id = The AppStream-ID to look for.
+	 *     cid = The AppStream-ID to look for.
 	 *
 	 * Return: An #AsComponent
 	 */
-	public Component getComponentById(string id)
+	public PtrArray getComponentById(string cid)
 	{
-		auto p = as_pool_get_component_by_id(asPool, Str.toStringz(id));
+		auto p = as_pool_get_component_by_id(asPool, Str.toStringz(cid));
 		
 		if(p is null)
 		{
 			return null;
 		}
 		
-		return ObjectG.getDObject!(Component)(cast(AsComponent*) p, true);
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
