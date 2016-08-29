@@ -215,6 +215,14 @@ public class Metadata : ObjectG
 	}
 
 	/**
+	 * Return: The AppStream metadata format version.
+	 */
+	public AsFormatVersion getFormatVersion()
+	{
+		return as_metadata_get_format_version(asMetadata);
+	}
+
+	/**
 	 * Gets the current active locale for parsing metadata,
 	 * or "ALL" if all locales are read.
 	 *
@@ -234,9 +242,7 @@ public class Metadata : ObjectG
 	}
 
 	/**
-	 * Gets the current parser mode
-	 *
-	 * Return: an #AsParserMode
+	 * Get the metadata parsing mode.
 	 */
 	public AsParserMode getParserMode()
 	{
@@ -260,7 +266,15 @@ public class Metadata : ObjectG
 		return as_metadata_get_write_header(asMetadata) != 0;
 	}
 
-	/** */
+	/**
+	 * Parses AppStream metadata.
+	 *
+	 * Params:
+	 *     data = Metadata describing one or more software components.
+	 *     format = The format of the data (XML or YAML).
+	 *
+	 * Throws: GException on failure.
+	 */
 	public void parse(string data, AsDataFormat format)
 	{
 		GError* err = null;
@@ -338,6 +352,18 @@ public class Metadata : ObjectG
 	public void setArchitecture(string arch)
 	{
 		as_metadata_set_architecture(asMetadata, Str.toStringz(arch));
+	}
+
+	/**
+	 * Set the current AppStream format version that we should generate data for
+	 * or be able to read.
+	 *
+	 * Params:
+	 *     versio = the AppStream metadata format version as #AsFormatVersion.
+	 */
+	public void setFormatVersion(AsFormatVersion versio)
+	{
+		as_metadata_set_format_version(asMetadata, versio);
 	}
 
 	/**

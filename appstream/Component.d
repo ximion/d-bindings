@@ -97,6 +97,19 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Add a reference to the addon that is enhancing this component.
+	 *
+	 * Params:
+	 *     addon = The #AsComponent that extends @cpt
+	 *
+	 * Since: 0.9.2
+	 */
+	public void addAddon(Component addon)
+	{
+		as_component_add_addon(asComponent, (addon is null) ? null : addon.getComponentStruct());
+	}
+
+	/**
 	 * Adds a bundle to the component.
 	 *
 	 * Params:
@@ -131,19 +144,6 @@ public class Component : ObjectG
 	public void addExtends(string cptId)
 	{
 		as_component_add_extends(asComponent, Str.toStringz(cptId));
-	}
-
-	/**
-	 * Add a reference to the extension enhancing this component.
-	 *
-	 * Params:
-	 *     cptId = The id of a component extending this component.
-	 *
-	 * Since: 0.9.2
-	 */
-	public void addExtension(string cptId)
-	{
-		as_component_add_extension(asComponent, Str.toStringz(cptId));
 	}
 
 	/**
@@ -257,6 +257,28 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Returns a list of #AsComponent objects which
+	 * are addons extending this component in functionality.
+	 *
+	 * This is the reverse of %as_component_get_extends()
+	 *
+	 * Return: An array of #AsComponent.
+	 *
+	 * Since: 0.9.2
+	 */
+	public PtrArray getAddons()
+	{
+		auto p = as_component_get_addons(asComponent);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
+	}
+
+	/**
 	 * Gets a bundle identifier string.
 	 *
 	 * Params:
@@ -276,6 +298,25 @@ public class Component : ObjectG
 		}
 		
 		return ObjectG.getDObject!(Bundle)(cast(AsBundle*) p);
+	}
+
+	/**
+	 * Get a list of all software bundles associated with this component.
+	 *
+	 * Return: A list of #AsBundle.
+	 *
+	 * Since: 0.10
+	 */
+	public PtrArray getBundles()
+	{
+		auto p = as_component_get_bundles(asComponent);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
@@ -315,10 +356,10 @@ public class Component : ObjectG
 	 * a software component.
 	 *
 	 * The format of the unique id usually is:
-	 * %{scope}/%{origin_type}/%{appstream_id}
+	 * %{scope}/%{origin}/%{distribution_system}/%{appstream_id}
 	 *
 	 * For example:
-	 * system/distributor/org.example.FooBar
+	 * system/distributor/package/org.example.FooBar
 	 *
 	 * Return: the unique session-specific identifier.
 	 */
@@ -378,28 +419,6 @@ public class Component : ObjectG
 	public PtrArray getExtends()
 	{
 		auto p = as_component_get_extends(asComponent);
-		
-		if(p is null)
-		{
-			return null;
-		}
-		
-		return new PtrArray(cast(GPtrArray*) p);
-	}
-
-	/**
-	 * Returns a string list of IDs of components which
-	 * are addons extending this component in functionality.
-	 *
-	 * This is the reverse of %as_component_get_extends()
-	 *
-	 * Return: A #GPtrArray or %NULL if not set.
-	 *
-	 * Since: 0.9.2
-	 */
-	public PtrArray getExtensions()
-	{
-		auto p = as_component_get_extensions(asComponent);
 		
 		if(p is null)
 		{
@@ -1008,9 +1027,9 @@ public class Component : ObjectG
 	 * Set a list of package names this component consists of.
 	 * (This should usually be just one package name)
 	 */
-	public void setPkgnames(string[] value)
+	public void setPkgnames(string[] packages)
 	{
-		as_component_set_pkgnames(asComponent, Str.toStringzArray(value));
+		as_component_set_pkgnames(asComponent, Str.toStringzArray(packages));
 	}
 
 	/**

@@ -77,10 +77,10 @@ __gshared extern(C)
 
 	GType as_component_get_type ();
 	AsComponent* as_component_new ();
+	void as_component_add_addon (AsComponent* cpt, AsComponent* addon);
 	void as_component_add_bundle (AsComponent* cpt, AsBundle* bundle);
 	void as_component_add_category (AsComponent* cpt, const(char)* category);
 	void as_component_add_extends (AsComponent* cpt, const(char)* cptId);
-	void as_component_add_extension (AsComponent* cpt, const(char)* cptId);
 	void as_component_add_icon (AsComponent* cpt, AsIcon* icon);
 	void as_component_add_language (AsComponent* cpt, const(char)* locale, int percentage);
 	void as_component_add_provided (AsComponent* cpt, AsProvided* prov);
@@ -90,7 +90,9 @@ __gshared extern(C)
 	void as_component_add_translation (AsComponent* cpt, AsTranslation* tr);
 	void as_component_add_url (AsComponent* cpt, AsUrlKind urlKind, const(char)* url);
 	char* as_component_get_active_locale (AsComponent* cpt);
+	GPtrArray* as_component_get_addons (AsComponent* cpt);
 	AsBundle* as_component_get_bundle (AsComponent* cpt, AsBundleKind bundleKind);
+	GPtrArray* as_component_get_bundles (AsComponent* cpt);
 	GPtrArray* as_component_get_categories (AsComponent* cpt);
 	GPtrArray* as_component_get_compulsory_for_desktops (AsComponent* cpt);
 	const(char)* as_component_get_data_id (AsComponent* cpt);
@@ -98,7 +100,6 @@ __gshared extern(C)
 	const(char)* as_component_get_desktop_id (AsComponent* cpt);
 	const(char)* as_component_get_developer_name (AsComponent* cpt);
 	GPtrArray* as_component_get_extends (AsComponent* cpt);
-	GPtrArray* as_component_get_extensions (AsComponent* cpt);
 	AsIcon* as_component_get_icon_by_size (AsComponent* cpt, uint width, uint height);
 	GPtrArray* as_component_get_icons (AsComponent* cpt);
 	const(char)* as_component_get_id (AsComponent* cpt);
@@ -144,7 +145,7 @@ __gshared extern(C)
 	void as_component_set_metadata_license (AsComponent* cpt, const(char)* value);
 	void as_component_set_name (AsComponent* cpt, const(char)* value, const(char)* locale);
 	void as_component_set_origin (AsComponent* cpt, const(char)* origin);
-	void as_component_set_pkgnames (AsComponent* cpt, char** value);
+	void as_component_set_pkgnames (AsComponent* cpt, char** packages);
 	void as_component_set_project_group (AsComponent* cpt, const(char)* value);
 	void as_component_set_project_license (AsComponent* cpt, const(char)* value);
 	void as_component_set_source_pkgname (AsComponent* cpt, const(char)* spkgname);
@@ -210,6 +211,7 @@ __gshared extern(C)
 	const(char)* as_metadata_get_architecture (AsMetadata* metad);
 	AsComponent* as_metadata_get_component (AsMetadata* metad);
 	GPtrArray* as_metadata_get_components (AsMetadata* metad);
+	AsFormatVersion as_metadata_get_format_version (AsMetadata* metad);
 	const(char)* as_metadata_get_locale (AsMetadata* metad);
 	const(char)* as_metadata_get_origin (AsMetadata* metad);
 	AsParserMode as_metadata_get_parser_mode (AsMetadata* metad);
@@ -220,6 +222,7 @@ __gshared extern(C)
 	void as_metadata_save_collection (AsMetadata* metad, const(char)* fname, AsDataFormat format, GError** err);
 	void as_metadata_save_metainfo (AsMetadata* metad, const(char)* fname, AsDataFormat format, GError** err);
 	void as_metadata_set_architecture (AsMetadata* metad, const(char)* arch);
+	void as_metadata_set_format_version (AsMetadata* metad, AsFormatVersion versio);
 	void as_metadata_set_locale (AsMetadata* metad, const(char)* locale);
 	void as_metadata_set_origin (AsMetadata* metad, const(char)* origin);
 	void as_metadata_set_parser_mode (AsMetadata* metad, AsParserMode mode);
@@ -232,25 +235,24 @@ __gshared extern(C)
 	AsPool* as_pool_new ();
 	GQuark as_pool_error_quark ();
 	int as_pool_add_component (AsPool* pool, AsComponent* cpt, GError** err);
+	void as_pool_add_metadata_location (AsPool* pool, const(char)* directory);
 	void as_pool_clear (AsPool* pool);
+	void as_pool_clear_metadata_locations (AsPool* pool);
 	uint as_pool_get_cache_age (AsPool* pool);
 	AsCacheFlags as_pool_get_cache_flags (AsPool* pool);
-	GPtrArray* as_pool_get_component_by_id (AsPool* pool, const(char)* cid);
 	GPtrArray* as_pool_get_components (AsPool* pool);
-	GPtrArray* as_pool_get_components_by_categories (AsPool* pool, const(char)* categories);
-	GPtrArray* as_pool_get_components_by_kind (AsPool* pool, AsComponentKind kind, GError** err);
-	GPtrArray* as_pool_get_components_by_provided_item (AsPool* pool, AsProvidedKind kind, const(char)* item, GError** err);
+	GPtrArray* as_pool_get_components_by_categories (AsPool* pool, char** categories);
+	GPtrArray* as_pool_get_components_by_id (AsPool* pool, const(char)* cid);
+	GPtrArray* as_pool_get_components_by_kind (AsPool* pool, AsComponentKind kind);
+	GPtrArray* as_pool_get_components_by_provided_item (AsPool* pool, AsProvidedKind kind, const(char)* item);
 	const(char)* as_pool_get_locale (AsPool* pool);
-	GPtrArray* as_pool_get_metadata_locations (AsPool* pool);
 	int as_pool_load (AsPool* pool, GCancellable* cancellable, GError** err);
 	int as_pool_load_cache_file (AsPool* pool, const(char)* fname, GError** err);
-	int as_pool_load_metadata (AsPool* pool);
 	int as_pool_refresh_cache (AsPool* pool, int force, GError** err);
 	int as_pool_save_cache_file (AsPool* pool, const(char)* fname, GError** err);
 	GPtrArray* as_pool_search (AsPool* pool, const(char)* search);
 	void as_pool_set_cache_flags (AsPool* pool, AsCacheFlags flags);
 	void as_pool_set_locale (AsPool* pool, const(char)* locale);
-	void as_pool_set_metadata_locations (AsPool* pool, char** dirs);
 
 	// appstream.Provided
 

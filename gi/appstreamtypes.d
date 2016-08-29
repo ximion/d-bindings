@@ -158,6 +158,34 @@ public enum AsDataFormat
 alias AsDataFormat DataFormat;
 
 /**
+ * Format version / level of the AppStream metadata.
+ */
+public enum AsFormatVersion
+{
+	/**
+	 * 0.6
+	 */
+	0_6 = 0,
+	/**
+	 * 0.7
+	 */
+	0_7 = 1,
+	/**
+	 * 0.8
+	 */
+	0_8 = 2,
+	/**
+	 * 0.9
+	 */
+	0_9 = 3,
+	/**
+	 * 0.10
+	 */
+	0_10 = 4,
+}
+alias AsFormatVersion FormatVersion;
+
+/**
  * The icon type.
  */
 public enum AsIconKind
@@ -351,14 +379,15 @@ alias AsMetadataError MetadataError;
  */
 public enum AsParserMode
 {
+	UNKNOWN = 0,
 	/**
 	 * Parse AppStream upstream metadata (metainfo files)
 	 */
-	METAINFO = 0,
+	METAINFO = 1,
 	/**
 	 * Parse AppStream metadata collections (shipped by software distributors)
 	 */
-	COLLECTION = 1,
+	COLLECTION = 2,
 }
 alias AsParserMode ParserMode;
 
@@ -383,10 +412,6 @@ public enum AsPoolError
 	 * An AppStream-ID collision occured (a component with that ID already existed in the pool)
 	 */
 	COLLISION = 3,
-	/**
-	 * A search or selection term was invalid.
-	 */
-	TERM_INVALID = 4,
 }
 alias AsPoolError PoolError;
 
@@ -603,13 +628,13 @@ public enum AsValueFlags
 	 */
 	NONE = 0,
 	/**
-	 * Don't fall back to C when retrieving translated values.
-	 */
-	NO_TRANSLATION_FALLBACK = 1,
-	/**
 	 * Check for duplicates when adding items to list values.
 	 */
-	DUPLICATE_CHECK = 2,
+	DUPLICATE_CHECK = 1,
+	/**
+	 * Don't fall back to C when retrieving translated values.
+	 */
+	NO_TRANSLATION_FALLBACK = 2,
 }
 alias AsValueFlags ValueFlags;
 

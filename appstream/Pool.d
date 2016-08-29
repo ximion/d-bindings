@@ -124,11 +124,32 @@ public class Pool : ObjectG
 	}
 
 	/**
+	 * Add a location for the data pool to read data from.
+	 * If @directory contains a "xml", "xmls", "yaml" or "icons" subdirectory (or all of them),
+	 * those paths will be added to the search paths instead.
+	 *
+	 * Params:
+	 *     directory = An existing filesystem location.
+	 */
+	public void addMetadataLocation(string directory)
+	{
+		as_pool_add_metadata_location(asPool, Str.toStringz(directory));
+	}
+
+	/**
 	 * Remove all metadat from the pool.
 	 */
 	public void clear()
 	{
 		as_pool_clear(asPool);
+	}
+
+	/**
+	 * Remove all metadata locations from the list of watched locations.
+	 */
+	public void clearMetadataLocations()
+	{
+		as_pool_clear_metadata_locations(asPool);
 	}
 
 	/**
@@ -145,28 +166,6 @@ public class Pool : ObjectG
 	public AsCacheFlags getCacheFlags()
 	{
 		return as_pool_get_cache_flags(asPool);
-	}
-
-	/**
-	 * Get a specific component by its ID.
-	 * This function may contain multiple results if we have
-	 * data describing this component from multiple scopes/origin types.
-	 *
-	 * Params:
-	 *     cid = The AppStream-ID to look for.
-	 *
-	 * Return: An #AsComponent
-	 */
-	public PtrArray getComponentById(string cid)
-	{
-		auto p = as_pool_get_component_by_id(asPool, Str.toStringz(cid));
-		
-		if(p is null)
-		{
-			return null;
-		}
-		
-		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
@@ -190,13 +189,35 @@ public class Pool : ObjectG
 	 * Return a list of components which are in one of the categories.
 	 *
 	 * Params:
-	 *     categories = A semicolon-separated list of XDG categories to include.
+	 *     categories = An array of XDG categories to include.
 	 *
 	 * Return: an array of #AsComponent objects which have been found.
 	 */
-	public PtrArray getComponentsByCategories(string categories)
+	public PtrArray getComponentsByCategories(string[] categories)
 	{
-		auto p = as_pool_get_components_by_categories(asPool, Str.toStringz(categories));
+		auto p = as_pool_get_components_by_categories(asPool, Str.toStringzArray(categories));
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new PtrArray(cast(GPtrArray*) p);
+	}
+
+	/**
+	 * Get a specific component by its ID.
+	 * This function may contain multiple results if we have
+	 * data describing this component from multiple scopes/origin types.
+	 *
+	 * Params:
+	 *     cid = The AppStream-ID to look for.
+	 *
+	 * Return: An #AsComponent
+	 */
+	public PtrArray getComponentsById(string cid)
+	{
+		auto p = as_pool_get_components_by_id(asPool, Str.toStringz(cid));
 		
 		if(p is null)
 		{
@@ -213,19 +234,10 @@ public class Pool : ObjectG
 	 *     kind = An #AsComponentKind.
 	 *
 	 * Return: an array of #AsComponent objects which have been found.
-	 *
-	 * Throws: GException on failure.
 	 */
 	public PtrArray getComponentsByKind(AsComponentKind kind)
 	{
-		GError* err = null;
-		
-		auto p = as_pool_get_components_by_kind(asPool, kind, &err);
-		
-		if (err !is null)
-		{
-			throw new GException( new ErrorG(err) );
-		}
+		auto p = as_pool_get_components_by_kind(asPool, kind);
 		
 		if(p is null)
 		{
@@ -243,19 +255,10 @@ public class Pool : ObjectG
 	 *     item = The value of the provided item.
 	 *
 	 * Return: an array of #AsComponent objects which have been found.
-	 *
-	 * Throws: GException on failure.
 	 */
 	public PtrArray getComponentsByProvidedItem(AsProvidedKind kind, string item)
 	{
-		GError* err = null;
-		
-		auto p = as_pool_get_components_by_provided_item(asPool, kind, Str.toStringz(item), &err);
-		
-		if (err !is null)
-		{
-			throw new GException( new ErrorG(err) );
-		}
+		auto p = as_pool_get_components_by_provided_item(asPool, kind, Str.toStringz(item));
 		
 		if(p is null)
 		{
@@ -273,23 +276,6 @@ public class Pool : ObjectG
 	public string getLocale()
 	{
 		return Str.toString(as_pool_get_locale(asPool));
-	}
-
-	/**
-	 * Return a list of all locations which are searched for metadata.
-	 *
-	 * Return: A string-list of watched (absolute) filepaths
-	 */
-	public PtrArray getMetadataLocations()
-	{
-		auto p = as_pool_get_metadata_locations(asPool);
-		
-		if(p is null)
-		{
-			return null;
-		}
-		
-		return new PtrArray(cast(GPtrArray*) p);
 	}
 
 	/**
@@ -338,14 +324,6 @@ public class Pool : ObjectG
 		}
 		
 		return p;
-	}
-
-	/**
-	 * Load fresh metadata from AppStream directories.
-	 */
-	public bool loadMetadata()
-	{
-		return as_pool_load_metadata(asPool) != 0;
 	}
 
 	/**
@@ -438,19 +416,5 @@ public class Pool : ObjectG
 	public void setLocale(string locale)
 	{
 		as_pool_set_locale(asPool, Str.toStringz(locale));
-	}
-
-	/**
-	 * Set locations for the data pool to read it's data from.
-	 * This is mainly used for testing purposes. Each location should have an
-	 * "xmls" and/or "yaml" subdirectory with the actual data as (compressed)
-	 * AppStream XML or DEP-11 YAML in it.
-	 *
-	 * Params:
-	 *     dirs = a zero-terminated array of data input directories.
-	 */
-	public void setMetadataLocations(string[] dirs)
-	{
-		as_pool_set_metadata_locations(asPool, Str.toStringzArray(dirs));
 	}
 }
