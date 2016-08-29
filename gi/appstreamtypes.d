@@ -165,23 +165,23 @@ public enum AsFormatVersion
 	/**
 	 * 0.6
 	 */
-	0_6 = 0,
+	v0_6 = 0,
 	/**
 	 * 0.7
 	 */
-	0_7 = 1,
+	v0_7 = 1,
 	/**
 	 * 0.8
 	 */
-	0_8 = 2,
+	v0_8 = 2,
 	/**
 	 * 0.9
 	 */
-	0_9 = 3,
+	v0_9 = 3,
 	/**
 	 * 0.10
 	 */
-	0_10 = 4,
+	v0_10 = 4,
 }
 alias AsFormatVersion FormatVersion;
 
