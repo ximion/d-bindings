@@ -132,7 +132,7 @@ public class Metadata : ObjectG
 	 *
 	 * Throws: GException on failure.
 	 */
-	public string componentToMetainfo(AsDataFormat format)
+	public string componentToMetainfo(AsFormatKind format)
 	{
 		GError* err = null;
 		
@@ -158,7 +158,7 @@ public class Metadata : ObjectG
 	 *
 	 * Throws: GException on failure.
 	 */
-	public string componentsToCollection(AsDataFormat format)
+	public string componentsToCollection(AsFormatKind format)
 	{
 		GError* err = null;
 		
@@ -215,6 +215,14 @@ public class Metadata : ObjectG
 	}
 
 	/**
+	 * Get the metadata parsing mode.
+	 */
+	public AsFormatStyle getFormatStyle()
+	{
+		return as_metadata_get_format_style(asMetadata);
+	}
+
+	/**
 	 * Return: The AppStream metadata format version.
 	 */
 	public AsFormatVersion getFormatVersion()
@@ -239,14 +247,6 @@ public class Metadata : ObjectG
 	public string getOrigin()
 	{
 		return Str.toString(as_metadata_get_origin(asMetadata));
-	}
-
-	/**
-	 * Get the metadata parsing mode.
-	 */
-	public AsParserMode getParserMode()
-	{
-		return as_metadata_get_parser_mode(asMetadata);
 	}
 
 	/**
@@ -275,7 +275,7 @@ public class Metadata : ObjectG
 	 *
 	 * Throws: GException on failure.
 	 */
-	public void parse(string data, AsDataFormat format)
+	public void parse(string data, AsFormatKind format)
 	{
 		GError* err = null;
 		
@@ -292,11 +292,11 @@ public class Metadata : ObjectG
 	 *
 	 * Params:
 	 *     file = #GFile for the upstream metadata
-	 *     format = The format the data is in, or %AS_DATA_FORMAT_UNKNOWN if not known.
+	 *     format = The format the data is in, or %AS_FORMAT_KIND_UNKNOWN if not known.
 	 *
 	 * Throws: GException on failure.
 	 */
-	public void parseFile(FileIF file, AsDataFormat format)
+	public void parseFile(FileIF file, AsFormatKind format)
 	{
 		GError* err = null;
 		
@@ -309,7 +309,7 @@ public class Metadata : ObjectG
 	}
 
 	/** */
-	public void saveCollection(string fname, AsDataFormat format)
+	public void saveCollection(string fname, AsFormatKind format)
 	{
 		GError* err = null;
 		
@@ -331,7 +331,7 @@ public class Metadata : ObjectG
 	 *
 	 * Throws: GException on failure.
 	 */
-	public void saveMetainfo(string fname, AsDataFormat format)
+	public void saveMetainfo(string fname, AsFormatKind format)
 	{
 		GError* err = null;
 		
@@ -352,6 +352,17 @@ public class Metadata : ObjectG
 	public void setArchitecture(string arch)
 	{
 		as_metadata_set_architecture(asMetadata, Str.toStringz(arch));
+	}
+
+	/**
+	 * Sets the current metadata parsing mode.
+	 *
+	 * Params:
+	 *     mode = the #AsFormatStyle.
+	 */
+	public void setFormatStyle(AsFormatStyle mode)
+	{
+		as_metadata_set_format_style(asMetadata, mode);
 	}
 
 	/**
@@ -389,17 +400,6 @@ public class Metadata : ObjectG
 	public void setOrigin(string origin)
 	{
 		as_metadata_set_origin(asMetadata, Str.toStringz(origin));
-	}
-
-	/**
-	 * Sets the current metadata parsing mode.
-	 *
-	 * Params:
-	 *     mode = the #AsParserMode.
-	 */
-	public void setParserMode(AsParserMode mode)
-	{
-		as_metadata_set_parser_mode(asMetadata, mode);
 	}
 
 	/**

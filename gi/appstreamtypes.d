@@ -140,7 +140,7 @@ alias AsComponentKind ComponentKind;
 /**
  * Format of the AppStream metadata.
  */
-public enum AsDataFormat
+public enum AsFormatKind
 {
 	/**
 	 * Unknown metadata format.
@@ -155,10 +155,30 @@ public enum AsDataFormat
 	 */
 	YAML = 2,
 }
-alias AsDataFormat DataFormat;
+alias AsFormatKind FormatKind;
 
 /**
- * Format version / level of the AppStream metadata.
+ * There are a few differences between AppStream's metainfo files (shipped by upstream projects)
+ * and the collection metadata (shipped by distributors).
+ * The data source kind indicates which style we should process.
+ * Usually you do not want to set this explicitly.
+ */
+public enum AsFormatStyle
+{
+	UNKNOWN = 0,
+	/**
+	 * Parse AppStream upstream metadata (metainfo files)
+	 */
+	METAINFO = 1,
+	/**
+	 * Parse AppStream metadata collections (shipped by software distributors)
+	 */
+	COLLECTION = 2,
+}
+alias AsFormatStyle FormatStyle;
+
+/**
+ * Format version / API level of the AppStream metadata.
  */
 public enum AsFormatVersion
 {
@@ -370,26 +390,6 @@ public enum AsMetadataError
 	NO_COMPONENT = 3,
 }
 alias AsMetadataError MetadataError;
-
-/**
- * There are a few differences between AppStream's metainfo files (shipped by upstream projects)
- * and the collection metadata (shipped by distributors).
- * The parser mode indicates which style we should process.
- * Usually you do not want to set this explicitly.
- */
-public enum AsParserMode
-{
-	UNKNOWN = 0,
-	/**
-	 * Parse AppStream upstream metadata (metainfo files)
-	 */
-	METAINFO = 1,
-	/**
-	 * Parse AppStream metadata collections (shipped by software distributors)
-	 */
-	COLLECTION = 2,
-}
-alias AsParserMode ParserMode;
 
 /**
  * A metadata pool error.

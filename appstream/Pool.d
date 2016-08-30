@@ -153,14 +153,6 @@ public class Pool : ObjectG
 	}
 
 	/**
-	 * Get the age of our internal cache.
-	 */
-	public uint getCacheAge()
-	{
-		return as_pool_get_cache_age(asPool);
-	}
-
-	/**
 	 * Get the #AsCacheFlags for this data pool.
 	 */
 	public AsCacheFlags getCacheFlags()
