@@ -288,6 +288,27 @@ public class Metadata : ObjectG
 	}
 
 	/**
+	 * Parses XDG Desktop Entry metadata and adds it to the pool.
+	 *
+	 * Params:
+	 *     data = Metadata describing one or more software components.
+	 *     cid = The component-id the new #AsComponent should have.
+	 *
+	 * Throws: GException on failure.
+	 */
+	public void parseDesktopData(string data, string cid)
+	{
+		GError* err = null;
+		
+		as_metadata_parse_desktop_data(asMetadata, Str.toStringz(data), Str.toStringz(cid), &err);
+		
+		if (err !is null)
+		{
+			throw new GException( new ErrorG(err) );
+		}
+	}
+
+	/**
 	 * Parses an AppStream upstream metadata file.
 	 *
 	 * Params:

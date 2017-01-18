@@ -87,9 +87,9 @@ public class DistroDetails : ObjectG
 	}
 
 	/** */
-	public bool getBool(string key)
+	public bool getBool(string key, bool defaultVal)
 	{
-		return as_distro_details_get_bool(asDistroDetails, Str.toStringz(key)) != 0;
+		return as_distro_details_get_bool(asDistroDetails, Str.toStringz(key), defaultVal) != 0;
 	}
 
 	/** */

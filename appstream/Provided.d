@@ -140,7 +140,7 @@ public class Provided : ObjectG
 	/**
 	 * Get an array of provided data.
 	 *
-	 * Return: An utf-8 array of provided items, free with g_free()
+	 * Return: An string list of provided items.
 	 */
 	public PtrArray getItems()
 	{

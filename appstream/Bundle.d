@@ -92,28 +92,28 @@ public class Bundle : ObjectG
 	 * Converts the text representation to an enumerated value.
 	 *
 	 * Params:
-	 *     bundleKind = the string.
+	 *     bundleStr = the string.
 	 *
 	 * Return: a #AsBundleKind or %AS_BUNDLE_KIND_UNKNOWN for unknown
 	 */
-	public static AsBundleKind kindFromString(string bundleKind)
+	public static AsBundleKind kindFromString(string bundleStr)
 	{
-		return as_bundle_kind_from_string(Str.toStringz(bundleKind));
+		return as_bundle_kind_from_string(Str.toStringz(bundleStr));
 	}
 
 	/**
 	 * Converts the enumerated value to an text representation.
 	 *
 	 * Params:
-	 *     bundleKind = the %AsBundleKind.
+	 *     kind = the %AsBundleKind.
 	 *
-	 * Return: string version of @bundle_kind
+	 * Return: string version of @kind
 	 *
 	 * Since: 0.8.0
 	 */
-	public static string kindToString(AsBundleKind bundleKind)
+	public static string kindToString(AsBundleKind kind)
 	{
-		return Str.toString(as_bundle_kind_to_string(bundleKind));
+		return Str.toString(as_bundle_kind_to_string(kind));
 	}
 
 	/**

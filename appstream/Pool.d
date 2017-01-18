@@ -261,6 +261,14 @@ public class Pool : ObjectG
 	}
 
 	/**
+	 * Get the #AsPoolFlags for this data pool.
+	 */
+	public AsPoolFlags getFlags()
+	{
+		return as_pool_get_flags(asPool);
+	}
+
+	/**
 	 * Gets the currently used locale.
 	 *
 	 * Return: Locale used for metadata parsing.
@@ -367,7 +375,7 @@ public class Pool : ObjectG
 
 	/**
 	 * Search for a list of components matching the search terms.
-	 * The list will be unordered.
+	 * The list will be ordered by match score.
 	 *
 	 * Params:
 	 *     search = A search string
@@ -397,6 +405,17 @@ public class Pool : ObjectG
 	public void setCacheFlags(AsCacheFlags flags)
 	{
 		as_pool_set_cache_flags(asPool, flags);
+	}
+
+	/**
+	 * Set the #AsPoolFlags for this data pool.
+	 *
+	 * Params:
+	 *     flags = The new #AsPoolFlags.
+	 */
+	public void setFlags(AsPoolFlags flags)
+	{
+		as_pool_set_flags(asPool, flags);
 	}
 
 	/**

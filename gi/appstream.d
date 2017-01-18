@@ -33,8 +33,8 @@ __gshared extern(C)
 
 	GType as_bundle_get_type ();
 	AsBundle* as_bundle_new ();
-	AsBundleKind as_bundle_kind_from_string (const(char)* bundleKind);
-	const(char)* as_bundle_kind_to_string (AsBundleKind bundleKind);
+	AsBundleKind as_bundle_kind_from_string (const(char)* bundleStr);
+	const(char)* as_bundle_kind_to_string (AsBundleKind kind);
 	const(char)* as_bundle_get_id (AsBundle* bundle);
 	AsBundleKind as_bundle_get_kind (AsBundle* bundle);
 	void as_bundle_set_id (AsBundle* bundle, const(char)* id);
@@ -95,6 +95,8 @@ __gshared extern(C)
 	GPtrArray* as_component_get_bundles (AsComponent* cpt);
 	GPtrArray* as_component_get_categories (AsComponent* cpt);
 	GPtrArray* as_component_get_compulsory_for_desktops (AsComponent* cpt);
+	GHashTable* as_component_get_custom (AsComponent* cpt);
+	char* as_component_get_custom_value (AsComponent* cpt, const(char)* key);
 	const(char)* as_component_get_data_id (AsComponent* cpt);
 	const(char)* as_component_get_description (AsComponent* cpt);
 	const(char)* as_component_get_desktop_id (AsComponent* cpt);
@@ -128,7 +130,9 @@ __gshared extern(C)
 	AsValueFlags as_component_get_value_flags (AsComponent* cpt);
 	int as_component_has_bundle (AsComponent* cpt);
 	int as_component_has_category (AsComponent* cpt, const(char)* category);
+	int as_component_insert_custom_value (AsComponent* cpt, const(char)* key, const(char)* value);
 	int as_component_is_compulsory_for_desktop (AsComponent* cpt, const(char)* desktop);
+	int as_component_is_ignored (AsComponent* cpt);
 	int as_component_is_member_of_category (AsComponent* cpt, AsCategory* category);
 	int as_component_is_valid (AsComponent* cpt);
 	uint as_component_search_matches (AsComponent* cpt, const(char)* term);
@@ -157,7 +161,7 @@ __gshared extern(C)
 
 	GType as_distro_details_get_type ();
 	AsDistroDetails* as_distro_details_new ();
-	int as_distro_details_get_bool (AsDistroDetails* distro, const(char)* key);
+	int as_distro_details_get_bool (AsDistroDetails* distro, const(char)* key, int defaultVal);
 	const(char)* as_distro_details_get_id (AsDistroDetails* distro);
 	const(char)* as_distro_details_get_name (AsDistroDetails* distro);
 	char* as_distro_details_get_str (AsDistroDetails* distro, const(char)* key);
@@ -218,6 +222,7 @@ __gshared extern(C)
 	int as_metadata_get_update_existing (AsMetadata* metad);
 	int as_metadata_get_write_header (AsMetadata* metad);
 	void as_metadata_parse (AsMetadata* metad, const(char)* data, AsFormatKind format, GError** err);
+	void as_metadata_parse_desktop_data (AsMetadata* metad, const(char)* data, const(char)* cid, GError** err);
 	void as_metadata_parse_file (AsMetadata* metad, GFile* file, AsFormatKind format, GError** err);
 	void as_metadata_save_collection (AsMetadata* metad, const(char)* fname, AsFormatKind format, GError** err);
 	void as_metadata_save_metainfo (AsMetadata* metad, const(char)* fname, AsFormatKind format, GError** err);
@@ -244,6 +249,7 @@ __gshared extern(C)
 	GPtrArray* as_pool_get_components_by_id (AsPool* pool, const(char)* cid);
 	GPtrArray* as_pool_get_components_by_kind (AsPool* pool, AsComponentKind kind);
 	GPtrArray* as_pool_get_components_by_provided_item (AsPool* pool, AsProvidedKind kind, const(char)* item);
+	AsPoolFlags as_pool_get_flags (AsPool* pool);
 	const(char)* as_pool_get_locale (AsPool* pool);
 	int as_pool_load (AsPool* pool, GCancellable* cancellable, GError** err);
 	int as_pool_load_cache_file (AsPool* pool, const(char)* fname, GError** err);
@@ -251,6 +257,7 @@ __gshared extern(C)
 	int as_pool_save_cache_file (AsPool* pool, const(char)* fname, GError** err);
 	GPtrArray* as_pool_search (AsPool* pool, const(char)* search);
 	void as_pool_set_cache_flags (AsPool* pool, AsCacheFlags flags);
+	void as_pool_set_flags (AsPool* pool, AsPoolFlags flags);
 	void as_pool_set_locale (AsPool* pool, const(char)* locale);
 
 	// appstream.Provided

@@ -45,6 +45,14 @@ public enum AsBundleKind
 	 * A Flatpak bundle
 	 */
 	FLATPAK = 3,
+	/**
+	 * An AppImageKit bundle
+	 */
+	APPIMAGE = 4,
+	/**
+	 * A Snap/Snappy bundle
+	 */
+	SNAP = 5,
 }
 alias AsBundleKind BundleKind;
 
@@ -54,7 +62,7 @@ alias AsBundleKind BundleKind;
 public enum AsCacheFlags
 {
 	/**
-	 * Type invalid or not known
+	 * No flags.
 	 */
 	NONE = 0,
 	/**
@@ -133,7 +141,14 @@ public enum AsComponentKind
 	 * Firmware
 	 */
 	FIRMWARE = 9,
-	LAST = 10,
+	/**
+	 * A driver
+	 */
+	DRIVER = 10,
+	/**
+	 * Software localization (usually l10n resources)
+	 */
+	LOCALIZATION = 11,
 }
 alias AsComponentKind ComponentKind;
 
@@ -154,6 +169,10 @@ public enum AsFormatKind
 	 * AppStream YAML (DEP-11) metadata.
 	 */
 	YAML = 2,
+	/**
+	 * XDG Desktop Entry data.
+	 */
+	DESKTOP_ENTRY = 3,
 }
 alias AsFormatKind FormatKind;
 
@@ -414,6 +433,30 @@ public enum AsPoolError
 	COLLISION = 3,
 }
 alias AsPoolError PoolError;
+
+/**
+ * Flags on how caching should be used.
+ */
+public enum AsPoolFlags
+{
+	/**
+	 * No flags.
+	 */
+	NONE = 0,
+	/**
+	 * Add AppStream collection metadata to the pool.
+	 */
+	READ_COLLECTION = 1,
+	/**
+	 * Add data from AppStream metainfo files to the pool.
+	 */
+	READ_METAINFO = 2,
+	/**
+	 * Add metadata from .desktop files to the pool.
+	 */
+	READ_DESKTOP_FILES = 4,
+}
+alias AsPoolFlags PoolFlags;
 
 /**
  * Type of the public interface components can provide.

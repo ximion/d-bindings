@@ -31,6 +31,7 @@ private import appstream.Translation;
 private import gi.appstream;
 public  import gi.appstreamtypes;
 private import glib.ConstructionException;
+private import glib.HashTable;
 private import glib.ListG;
 private import glib.PtrArray;
 private import glib.Str;
@@ -350,6 +351,36 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Return: Hash table of custom user defined data fields.
+	 *
+	 * Since: 0.10.5
+	 */
+	public HashTable getCustom()
+	{
+		auto p = as_component_get_custom(asComponent);
+		
+		if(p is null)
+		{
+			return null;
+		}
+		
+		return new HashTable(cast(GHashTable*) p);
+	}
+
+	/**
+	 * Retrieve value for a custom data entry with the given key.
+	 *
+	 * Params:
+	 *     key = Field name.
+	 *
+	 * Since: 0.10.5
+	 */
+	public string getCustomValue(string key)
+	{
+		return Str.toString(as_component_get_custom_value(asComponent, Str.toStringz(key)));
+	}
+
+	/**
 	 * Get a unique identifier for this metadata set.
 	 * This unique ID is only valid for the current session,
 	 * as opposed to the AppStream ID which uniquely identifies
@@ -359,7 +390,7 @@ public class Component : ObjectG
 	 * %{scope}/%{origin}/%{distribution_system}/%{appstream_id}
 	 *
 	 * For example:
-	 * system/distributor/package/org.example.FooBar
+	 * system/os/package/org.example.FooBar
 	 *
 	 * Return: the unique session-specific identifier.
 	 */
@@ -818,6 +849,22 @@ public class Component : ObjectG
 	}
 
 	/**
+	 * Add a key and value pair to the custom data table.
+	 *
+	 * Params:
+	 *     key = Key name.
+	 *     value = A string value.
+	 *
+	 * Return: %TRUE if the key did not exist yet.
+	 *
+	 * Since: 0.10.5
+	 */
+	public bool insertCustomValue(string key, string value)
+	{
+		return as_component_insert_custom_value(asComponent, Str.toStringz(key), Str.toStringz(value)) != 0;
+	}
+
+	/**
 	 * Check if this component is compulsory for the given desktop.
 	 *
 	 * Params:
@@ -828,6 +875,16 @@ public class Component : ObjectG
 	public bool isCompulsoryForDesktop(string desktop)
 	{
 		return as_component_is_compulsory_for_desktop(asComponent, Str.toStringz(desktop)) != 0;
+	}
+
+	/**
+	 * Return: Whether this component's metadata should be ignored.
+	 *
+	 * Since: 0.10.2
+	 */
+	public bool isIgnored()
+	{
+		return as_component_is_ignored(asComponent) != 0;
 	}
 
 	/**
